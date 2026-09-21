@@ -1,65 +1,424 @@
 {
-  "actualizado": "14 de septiembre de 2026",
-  "tras": "tras la jornada 2",
-  "mi_equipo": "CD Colonia Moscardó",
-  "notas": [
-    ["Horarios:", "los designa la RFFM semana a semana, por eso la mayoría aparecen todavía sin hora. La fecha de cada jornada es la oficial del calendario; algún partido puede adelantarse al sábado."],
-    ["Jornada 34:", "el calendario oficial la sitúa el 9 de mayo de 2027, no el 5 como figuraba en el cartel del club."]
+ "actualizado": "21 de septiembre de 2026",
+ "tras": "tras la jornada 3",
+ "mi_equipo": "CD Colonia Moscardó",
+ "notas": [
+  [
+   "Horarios:",
+   "los designa la RFFM semana a semana, por eso la mayoría aparecen todavía sin hora. La fecha de cada jornada es la oficial del calendario; algún partido puede adelantarse al sábado."
   ],
-  "partidos": [
-    {"j": 1, "fecha": "2026-09-06", "local": true, "rival": "AD Torrejón", "hora": "19:00", "gf": 1, "gc": 0, "goles": "Hakim, 86'"},
-    {"j": 2, "fecha": "2026-09-13", "local": false, "rival": "AD Unión Adarve", "hora": "12:00", "gf": 1, "gc": 1, "goles": "Peñarando, 90+2'"},
-    {"j": 3, "fecha": "2026-09-20", "local": true, "rival": "Club Siello Nuevo Boadilla FC"},
-    {"j": 4, "fecha": "2026-09-27", "local": false, "rival": "CP Parla Escuela"},
-    {"j": 5, "fecha": "2026-10-04", "local": true, "rival": "CF Pozuelo de Alarcón"},
-    {"j": 6, "fecha": "2026-10-11", "local": false, "rival": "Real Aranjuez CF"},
-    {"j": 7, "fecha": "2026-10-18", "local": true, "rival": "CD Las Rozas"},
-    {"j": 8, "fecha": "2026-10-25", "local": false, "rival": "Rayo Vallecano de Madrid «B»"},
-    {"j": 9, "fecha": "2026-11-01", "local": true, "rival": "AD Cala Pozuelo"},
-    {"j": 10, "fecha": "2026-11-08", "local": false, "rival": "CD Leganés «B»"},
-    {"j": 11, "fecha": "2026-11-15", "local": true, "rival": "CD Galapagar"},
-    {"j": 12, "fecha": "2026-11-22", "local": false, "rival": "Rayo Ciudad Alcobendas CF"},
-    {"j": 13, "fecha": "2026-11-29", "local": true, "rival": "CF Trival Valderas Alcorcón"},
-    {"j": 14, "fecha": "2026-12-06", "local": false, "rival": "UD San Sebastián de los Reyes «B»"},
-    {"j": 15, "fecha": "2026-12-13", "local": false, "rival": "CD Móstoles URJC"},
-    {"j": 16, "fecha": "2026-12-20", "local": true, "rival": "México FC"},
-    {"j": 17, "fecha": "2027-01-10", "local": false, "rival": "CF Fuenlabrada"},
-    {"j": 18, "fecha": "2027-01-17", "local": false, "rival": "AD Torrejón"},
-    {"j": 19, "fecha": "2027-01-24", "local": true, "rival": "AD Unión Adarve"},
-    {"j": 20, "fecha": "2027-01-31", "local": false, "rival": "Club Siello Nuevo Boadilla FC"},
-    {"j": 21, "fecha": "2027-02-06", "local": true, "rival": "CP Parla Escuela"},
-    {"j": 22, "fecha": "2027-02-14", "local": false, "rival": "CF Pozuelo de Alarcón"},
-    {"j": 23, "fecha": "2027-02-21", "local": true, "rival": "Real Aranjuez CF"},
-    {"j": 24, "fecha": "2027-02-28", "local": false, "rival": "CD Las Rozas"},
-    {"j": 25, "fecha": "2027-03-07", "local": true, "rival": "Rayo Vallecano de Madrid «B»"},
-    {"j": 26, "fecha": "2027-03-14", "local": false, "rival": "AD Cala Pozuelo"},
-    {"j": 27, "fecha": "2027-03-21", "local": true, "rival": "CD Leganés «B»"},
-    {"j": 28, "fecha": "2027-03-28", "local": false, "rival": "CD Galapagar"},
-    {"j": 29, "fecha": "2027-04-04", "local": true, "rival": "Rayo Ciudad Alcobendas CF"},
-    {"j": 30, "fecha": "2027-04-11", "local": false, "rival": "CF Trival Valderas Alcorcón"},
-    {"j": 31, "fecha": "2027-04-18", "local": true, "rival": "UD San Sebastián de los Reyes «B»"},
-    {"j": 32, "fecha": "2027-04-25", "local": true, "rival": "CD Móstoles URJC"},
-    {"j": 33, "fecha": "2027-05-02", "local": false, "rival": "México FC"},
-    {"j": 34, "fecha": "2027-05-09", "local": true, "rival": "CF Fuenlabrada"}
+  [
+   "Jornada 6:",
+   "la RFFM adelanta el partido en Aranjuez al sábado 10 de octubre, a las 16:00."
   ],
-  "clasificacion": [
-    {"equipo": "CD Las Rozas", "pts": 6, "pj": 2, "g": 2, "e": 0, "p": 0, "gf": 6, "gc": 3},
-    {"equipo": "CD Galapagar", "pts": 4, "pj": 2, "g": 1, "e": 1, "p": 0, "gf": 6, "gc": 3},
-    {"equipo": "Rayo Ciudad Alcobendas CF", "pts": 4, "pj": 2, "g": 1, "e": 1, "p": 0, "gf": 6, "gc": 3},
-    {"equipo": "CF Trival Valderas Alcorcón", "pts": 4, "pj": 2, "g": 1, "e": 1, "p": 0, "gf": 3, "gc": 1},
-    {"equipo": "AD Unión Adarve", "pts": 4, "pj": 2, "g": 1, "e": 1, "p": 0, "gf": 3, "gc": 1},
-    {"equipo": "CD Móstoles URJC", "pts": 4, "pj": 2, "g": 1, "e": 1, "p": 0, "gf": 3, "gc": 1},
-    {"equipo": "CD Colonia Moscardó", "pts": 4, "pj": 2, "g": 1, "e": 1, "p": 0, "gf": 2, "gc": 1},
-    {"equipo": "CD Leganés «B»", "pts": 3, "pj": 2, "g": 1, "e": 0, "p": 1, "gf": 4, "gc": 3},
-    {"equipo": "UD San Sebastián de los Reyes «B»", "pts": 3, "pj": 2, "g": 1, "e": 0, "p": 1, "gf": 2, "gc": 2},
-    {"equipo": "AD Torrejón", "pts": 3, "pj": 2, "g": 1, "e": 0, "p": 1, "gf": 1, "gc": 1},
-    {"equipo": "AD Cala Pozuelo", "pts": 3, "pj": 2, "g": 1, "e": 0, "p": 1, "gf": 4, "gc": 5},
-    {"equipo": "CF Pozuelo de Alarcón", "pts": 2, "pj": 2, "g": 0, "e": 2, "p": 0, "gf": 2, "gc": 2},
-    {"equipo": "Rayo Vallecano de Madrid «B»", "pts": 1, "pj": 2, "g": 0, "e": 1, "p": 1, "gf": 2, "gc": 3},
-    {"equipo": "México FC", "pts": 1, "pj": 2, "g": 0, "e": 1, "p": 1, "gf": 0, "gc": 1},
-    {"equipo": "CF Fuenlabrada", "pts": 1, "pj": 2, "g": 0, "e": 1, "p": 1, "gf": 1, "gc": 3},
-    {"equipo": "CP Parla Escuela", "pts": 1, "pj": 2, "g": 0, "e": 1, "p": 1, "gf": 2, "gc": 5},
-    {"equipo": "Club Siello Nuevo Boadilla FC", "pts": 0, "pj": 2, "g": 0, "e": 0, "p": 2, "gf": 1, "gc": 5},
-    {"equipo": "Real Aranjuez CF", "pts": 0, "pj": 2, "g": 0, "e": 0, "p": 2, "gf": 2, "gc": 7}
+  [
+   "Jornada 34:",
+   "el calendario oficial la sitúa el 9 de mayo de 2027, no el 5 como figuraba en el cartel del club."
   ]
+ ],
+ "partidos": [
+  {
+   "j": 1,
+   "fecha": "2026-09-06",
+   "local": true,
+   "rival": "AD Torrejón",
+   "hora": "19:00",
+   "gf": 1,
+   "gc": 0,
+   "goles": "Hakim, 86'"
+  },
+  {
+   "j": 2,
+   "fecha": "2026-09-13",
+   "local": false,
+   "rival": "AD Unión Adarve",
+   "hora": "12:00",
+   "gf": 1,
+   "gc": 1
+  },
+  {
+   "j": 3,
+   "fecha": "2026-09-20",
+   "local": true,
+   "rival": "Club Siello Nuevo Boadilla FC",
+   "hora": "12:00",
+   "gf": 5,
+   "gc": 1
+  },
+  {
+   "j": 4,
+   "fecha": "2026-09-27",
+   "local": false,
+   "rival": "CP Parla Escuela",
+   "hora": "11:30"
+  },
+  {
+   "j": 5,
+   "fecha": "2026-10-04",
+   "local": true,
+   "rival": "CF Pozuelo de Alarcón",
+   "hora": "12:00"
+  },
+  {
+   "j": 6,
+   "fecha": "2026-10-10",
+   "local": false,
+   "rival": "Real Aranjuez CF",
+   "hora": "16:00"
+  },
+  {
+   "j": 7,
+   "fecha": "2026-10-18",
+   "local": true,
+   "rival": "CD Las Rozas",
+   "hora": "12:00"
+  },
+  {
+   "j": 8,
+   "fecha": "2026-10-25",
+   "local": false,
+   "rival": "Rayo Vallecano «B»"
+  },
+  {
+   "j": 9,
+   "fecha": "2026-11-01",
+   "local": true,
+   "rival": "AD Cala Pozuelo",
+   "hora": "12:00"
+  },
+  {
+   "j": 10,
+   "fecha": "2026-11-08",
+   "local": false,
+   "rival": "CD Leganés «B»"
+  },
+  {
+   "j": 11,
+   "fecha": "2026-11-15",
+   "local": true,
+   "rival": "CD Galapagar"
+  },
+  {
+   "j": 12,
+   "fecha": "2026-11-22",
+   "local": false,
+   "rival": "Rayo Ciudad Alcobendas CF"
+  },
+  {
+   "j": 13,
+   "fecha": "2026-11-29",
+   "local": true,
+   "rival": "CF Trival Valderas Alcorcón"
+  },
+  {
+   "j": 14,
+   "fecha": "2026-12-06",
+   "local": false,
+   "rival": "UD San Sebastián de los Reyes «B»"
+  },
+  {
+   "j": 15,
+   "fecha": "2026-12-13",
+   "local": false,
+   "rival": "CD Móstoles URJC"
+  },
+  {
+   "j": 16,
+   "fecha": "2026-12-20",
+   "local": true,
+   "rival": "México FC"
+  },
+  {
+   "j": 17,
+   "fecha": "2027-01-10",
+   "local": false,
+   "rival": "CF Fuenlabrada"
+  },
+  {
+   "j": 18,
+   "fecha": "2027-01-17",
+   "local": false,
+   "rival": "AD Torrejón"
+  },
+  {
+   "j": 19,
+   "fecha": "2027-01-24",
+   "local": true,
+   "rival": "AD Unión Adarve"
+  },
+  {
+   "j": 20,
+   "fecha": "2027-01-31",
+   "local": false,
+   "rival": "Club Siello Nuevo Boadilla FC",
+   "hora": "11:30"
+  },
+  {
+   "j": 21,
+   "fecha": "2027-02-06",
+   "local": true,
+   "rival": "CP Parla Escuela"
+  },
+  {
+   "j": 22,
+   "fecha": "2027-02-14",
+   "local": false,
+   "rival": "CF Pozuelo de Alarcón"
+  },
+  {
+   "j": 23,
+   "fecha": "2027-02-21",
+   "local": true,
+   "rival": "Real Aranjuez CF"
+  },
+  {
+   "j": 24,
+   "fecha": "2027-02-28",
+   "local": false,
+   "rival": "CD Las Rozas"
+  },
+  {
+   "j": 25,
+   "fecha": "2027-03-07",
+   "local": true,
+   "rival": "Rayo Vallecano de Madrid «B»"
+  },
+  {
+   "j": 26,
+   "fecha": "2027-03-14",
+   "local": false,
+   "rival": "AD Cala Pozuelo"
+  },
+  {
+   "j": 27,
+   "fecha": "2027-03-21",
+   "local": true,
+   "rival": "CD Leganés «B»"
+  },
+  {
+   "j": 28,
+   "fecha": "2027-03-28",
+   "local": false,
+   "rival": "CD Galapagar"
+  },
+  {
+   "j": 29,
+   "fecha": "2027-04-04",
+   "local": true,
+   "rival": "Rayo Ciudad Alcobendas CF"
+  },
+  {
+   "j": 30,
+   "fecha": "2027-04-11",
+   "local": false,
+   "rival": "CF Trival Valderas Alcorcón",
+   "hora": "11:30"
+  },
+  {
+   "j": 31,
+   "fecha": "2027-04-18",
+   "local": true,
+   "rival": "UD San Sebastián de los Reyes «B»"
+  },
+  {
+   "j": 32,
+   "fecha": "2027-04-25",
+   "local": true,
+   "rival": "CD Móstoles URJC"
+  },
+  {
+   "j": 33,
+   "fecha": "2027-05-02",
+   "local": false,
+   "rival": "México FC"
+  },
+  {
+   "j": 34,
+   "fecha": "2027-05-09",
+   "local": true,
+   "rival": "CF Fuenlabrada"
+  }
+ ],
+ "clasificacion": [
+  {
+   "equipo": "CD Colonia Moscardó",
+   "pts": 7,
+   "pj": 3,
+   "g": 2,
+   "e": 1,
+   "p": 0,
+   "gf": 7,
+   "gc": 2
+  },
+  {
+   "equipo": "CD Las Rozas",
+   "pts": 7,
+   "pj": 3,
+   "g": 2,
+   "e": 1,
+   "p": 0,
+   "gf": 7,
+   "gc": 4
+  },
+  {
+   "equipo": "CD Móstoles URJC",
+   "pts": 7,
+   "pj": 3,
+   "g": 2,
+   "e": 1,
+   "p": 0,
+   "gf": 4,
+   "gc": 1
+  },
+  {
+   "equipo": "CD Leganés «B»",
+   "pts": 6,
+   "pj": 3,
+   "g": 2,
+   "e": 0,
+   "p": 1,
+   "gf": 8,
+   "gc": 4
+  },
+  {
+   "equipo": "Rayo Ciudad Alcobendas CF",
+   "pts": 5,
+   "pj": 3,
+   "g": 1,
+   "e": 2,
+   "p": 0,
+   "gf": 7,
+   "gc": 4
+  },
+  {
+   "equipo": "CD Galapagar",
+   "pts": 5,
+   "pj": 3,
+   "g": 1,
+   "e": 2,
+   "p": 0,
+   "gf": 7,
+   "gc": 4
+  },
+  {
+   "equipo": "AD Unión Adarve",
+   "pts": 5,
+   "pj": 3,
+   "g": 1,
+   "e": 2,
+   "p": 0,
+   "gf": 4,
+   "gc": 2
+  },
+  {
+   "equipo": "CF Trival Valderas Alcorcón",
+   "pts": 5,
+   "pj": 3,
+   "g": 1,
+   "e": 2,
+   "p": 0,
+   "gf": 4,
+   "gc": 2
+  },
+  {
+   "equipo": "CP Parla Escuela",
+   "pts": 4,
+   "pj": 3,
+   "g": 1,
+   "e": 1,
+   "p": 1,
+   "gf": 5,
+   "gc": 5
+  },
+  {
+   "equipo": "CF Fuenlabrada",
+   "pts": 4,
+   "pj": 3,
+   "g": 1,
+   "e": 1,
+   "p": 1,
+   "gf": 4,
+   "gc": 4
+  },
+  {
+   "equipo": "CF Pozuelo de Alarcón",
+   "pts": 3,
+   "pj": 3,
+   "g": 0,
+   "e": 3,
+   "p": 0,
+   "gf": 3,
+   "gc": 3
+  },
+  {
+   "equipo": "AD Cala Pozuelo",
+   "pts": 3,
+   "pj": 3,
+   "g": 1,
+   "e": 0,
+   "p": 2,
+   "gf": 4,
+   "gc": 6
+  },
+  {
+   "equipo": "AD Torrejón",
+   "pts": 3,
+   "pj": 3,
+   "g": 1,
+   "e": 0,
+   "p": 2,
+   "gf": 2,
+   "gc": 4
+  },
+  {
+   "equipo": "UD San Sebastián de los Reyes «B»",
+   "pts": 3,
+   "pj": 3,
+   "g": 1,
+   "e": 0,
+   "p": 2,
+   "gf": 2,
+   "gc": 5
+  },
+  {
+   "equipo": "México FC",
+   "pts": 2,
+   "pj": 3,
+   "g": 0,
+   "e": 2,
+   "p": 1,
+   "gf": 1,
+   "gc": 2
+  },
+  {
+   "equipo": "Rayo Vallecano de Madrid «B»",
+   "pts": 1,
+   "pj": 3,
+   "g": 0,
+   "e": 1,
+   "p": 2,
+   "gf": 3,
+   "gc": 7
+  },
+  {
+   "equipo": "Real Aranjuez CF",
+   "pts": 1,
+   "pj": 3,
+   "g": 0,
+   "e": 1,
+   "p": 2,
+   "gf": 3,
+   "gc": 8
+  },
+  {
+   "equipo": "Club Siello Nuevo Boadilla FC",
+   "pts": 0,
+   "pj": 3,
+   "g": 0,
+   "e": 0,
+   "p": 3,
+   "gf": 2,
+   "gc": 10
+  }
+ ]
 }
