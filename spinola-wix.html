@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clasificaciones CD Spínola Chamartín</title>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+     color:#1c1b1b;background:#f7f5f4;-webkit-font-smoothing:antialiased}
+.wrap{max-width:820px;margin:0 auto;padding:18px 14px 40px}
+a{color:#8E0909}
+
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.tabs button{font:inherit;font-size:13px;font-weight:600;padding:7px 13px;border-radius:999px;cursor:pointer;
+     border:1px solid #e0d9d7;background:#fff;color:#5f5857}
+.tabs button[aria-selected="true"]{background:#8E0909;border-color:#8E0909;color:#fff}
+
+
+.card{background:#fff;border:1px solid #e6e1df;border-radius:14px;margin-bottom:16px;overflow:hidden}
+.card > h2{margin:0;padding:13px 18px;font-size:11px;letter-spacing:.13em;text-transform:uppercase;
+     color:#7d7472;border-bottom:1px solid #eee9e7;font-weight:700;background:#fbfaf9}
+
+.match{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;padding:14px 18px}
+.match + .mline + .match{border-top:1px solid #f0ecea}
+.side{display:flex;align-items:center;gap:9px;min-width:0}
+.side.v{flex-direction:row-reverse;text-align:right}
+.side img{width:26px;height:26px;object-fit:contain;flex:none}
+.side span{font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.side.mio span{font-weight:700}
+.score{font-weight:700;font-size:17px;padding:3px 11px;border-radius:8px;background:#f2efed;white-space:nowrap}
+.score.g{background:#e3f3e6;color:#1c6b2c}
+.score.p{background:#fbeaea;color:#a11b1b}
+.score.e{background:#f4f0e2;color:#7a6410}
+.mline{padding:0 18px 12px;font-size:12px;color:#8a8180;margin-top:-6px}
+.next{padding:16px 18px}
+.next .match{padding:0}
+.next .when{font-size:13px;color:#5f5857;margin-top:8px}
+
+.tabla{width:100%;border-collapse:collapse;font-size:13.5px}
+.tabla th{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:#8a8180;
+     font-weight:600;text-align:right;padding:9px 6px;border-bottom:1px solid #eee9e7}
+.tabla th.eq{text-align:left;padding-left:14px}
+.tabla td{padding:8px 6px;text-align:right;border-bottom:1px solid #f4f0ee;font-variant-numeric:tabular-nums}
+.tabla tr:last-child td{border-bottom:0}
+.tabla td.pos{width:34px;color:#9a9291;padding-left:14px;text-align:left}
+.tabla td.eq{text-align:left;width:100%}
+.tabla td.eq div{display:flex;align-items:center;gap:8px}
+.tabla td.eq img{width:20px;height:20px;object-fit:contain;flex:none}
+.tabla td.pts{font-weight:700}
+.tabla tr.mio{background:#fdf2f2}
+.tabla tr.mio td{border-color:#f6e2e2}
+.tabla tr.mio td.eq{font-weight:700}
+.tabla tr.mio td.pos{color:#8E0909;font-weight:700}
+.racha{display:flex;gap:3px;justify-content:flex-end}
+.racha i{width:7px;height:7px;border-radius:50%;display:block}
+.racha i.G{background:#3aa650}.racha i.E{background:#d6bf4a}.racha i.P{background:#cf4b4b}
+.scroll{overflow-x:auto}
+
+.foot{font-size:11.5px;color:#948b8a;text-align:center;line-height:1.7}
+.foot a{color:#948b8a}
+.aviso{padding:18px;text-align:center;color:#7d7472;font-size:14px}
+@media (max-width:560px){
+  .hide-s{display:none}
+  .side span{font-size:12.5px}
+}
+</style>
+</head>
+<body>
+<div class="wrap"><div id="app"><p class="aviso">Cargando clasificación…</p></div></div>
+<script>
+/* ===================== CONFIGURACIÓN =====================
+ * ORIGEN: dirección pública de datos/resultados.json.
+ * EQUIPO: slug del equipo a mostrar en este bloque de Wix
+ *   "fs-tercera-division"      -> Spínola 'A'
+ *   "fs-primera-autonomica"    -> Spínola 'B'
+ *   "fs-preferente-aficionado" -> Spínola 'C'
+ *   ""                         -> todos, con pestañas para elegir
+ * ========================================================= */
+const ORIGEN = "https://jarroyosobrino-maker.github.io/spinola-web/resultados.json";
+const EQUIPO = "";
+
+const PATRON = /SPINOLA/i;
+const MESES = ["","ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const bonito = f => { const p = String(f||"").split("-"); return p.length === 3 ? `${+p[0]} ${MESES[+p[1]]} ${p[2]}` : (f||""); };
+const bonitoISO = f => { const p = String(f||"").split("-"); return p.length === 3 ? `${+p[2]} ${MESES[+p[1]]} ${p[0]}` : (f||""); };
+const corto = n => { n = String(n||"").trim(); if (!PATRON.test(n)) return n;
+  const m = n.match(/'([A-D])'$/); return "CD Spínola" + (m ? " " + m[1] : ""); };
+
+let BASE = "";
+const img = (ruta, cls) => ruta ? `<img src="${esc(BASE + ruta)}" alt=""${cls||""}>` : `<img alt="">`;
+
+function lado(nombre, escudo, mio, visitante){
+  return `<div class="side${visitante ? " v" : ""}${mio ? " mio" : ""}">${img(escudo)}<span>${esc(corto(nombre))}</span></div>`;
+}
+
+function partido(p){
+  const [jor, fecha, hora, campo, loc, vis, escL, escV, gl, gv, casa] = p;
+  if (gl === null || gl === undefined) return "";
+  const cls = gl === gv ? "e" : ((gl > gv) === !!casa ? "g" : "p");
+  return `<div class="match">${lado(loc, escL, casa, false)}<div class="score ${cls}">${gl} - ${gv}</div>${lado(vis, escV, !casa, true)}</div>
+  <div class="mline">J.${esc(jor)} · ${esc(bonito(fecha))}${campo ? " · " + esc(campo) : ""}</div>`;
+}
+
+function proximo(p){
+  if (!p) return "";
+  const [jor, fecha, hora, campo, loc, vis, escL, escV, , , casa] = p;
+  if (!loc || /No asignado/i.test(loc + vis)) return "";
+  const cuando = [fecha ? bonito(fecha) : "", hora || ""].filter(Boolean).join(" · ");
+  return `<section class="card"><h2>Próximo partido</h2><div class="next">
+    <div class="match">${lado(loc, escL, casa, false)}<div class="score">vs</div>${lado(vis, escV, !casa, true)}</div>
+    <div class="when">Jornada ${esc(jor)}${cuando ? " · " + esc(cuando) : ""}${campo ? "<br>" + esc(campo) : ""}</div>
+  </div></section>`;
+}
+
+function tabla(filas){
+  const tr = filas.map(([pos, nom, escudo, pj, g, e, p, gf, gc, pts, mio, racha]) => `<tr class="${mio ? "mio" : ""}">
+    <td class="pos">${pos}</td>
+    <td class="eq"><div>${escudo ? img(escudo) : ""}<span>${esc(corto(nom))}</span></div></td>
+    <td class="pts">${pts}</td><td>${pj}</td>
+    <td class="hide-s">${g}</td><td class="hide-s">${e}</td><td class="hide-s">${p}</td>
+    <td class="hide-s">${gf}</td><td class="hide-s">${gc}</td>
+    <td class="hide-s"><div class="racha">${[...(racha||"")].map(c => `<i class="${esc(c)}"></i>`).join("")}</div></td>
+  </tr>`).join("");
+  return `<section class="card"><h2>Clasificación</h2><div class="scroll"><table class="tabla">
+    <tr><th></th><th class="eq">Equipo</th><th>Pts</th><th>PJ</th><th class="hide-s">G</th><th class="hide-s">E</th>
+    <th class="hide-s">P</th><th class="hide-s">GF</th><th class="hide-s">GC</th><th class="hide-s">Racha</th></tr>
+    ${tr}</table></div></section>`;
+}
+
+function pagina(eq, generado){
+  const ult = (eq.ultimos || []).slice().reverse().map(partido).join("");
+  return `${proximo(eq.proximo)}
+  ${ult ? `<section class="card"><h2>Últimos resultados</h2>${ult}</section>` : ""}
+  ${tabla(eq.tabla || [])}
+  <p class="foot">Datos: <a href="${esc(eq.fuente || "#")}" target="_blank" rel="noopener">Real Federación de Fútbol de Madrid</a><br>
+  Actualizado el ${esc(bonitoISO(generado))}</p>`;
+}
+
+function pinta(d, slug){
+  BASE = d.base_escudos || "";
+  const equipos = d.equipos || [];
+  const elegido = equipos.find(e => e.slug === slug) || equipos[0];
+  if (!elegido){ error("El fichero no contiene equipos."); return; }
+  const fijo = EQUIPO || new URLSearchParams(location.search).get("equipo");
+  const pestañas = fijo ? "" : `<nav class="tabs" role="tablist">${equipos.map(e =>
+    `<button role="tab" data-slug="${esc(e.slug)}" aria-selected="${e === elegido}">${esc(corto(e.tabla.find(f => f[10])?.[1] || e.nombre))}</button>`).join("")}</nav>`;
+  document.getElementById("app").innerHTML = pestañas + pagina(elegido, d.generado);
+  document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => pinta(d, b.dataset.slug));
+  avisarAltura();
+  document.querySelectorAll("img").forEach(i => i.addEventListener("load", avisarAltura, {once:true}));
+}
+
+// Wix no ajusta la altura del bloque solo: se la comunicamos a la página madre.
+function avisarAltura(){
+  const h = document.documentElement.scrollHeight;
+  try { window.parent.postMessage({tipo:"altura-clasificacion", altura:h}, "*"); } catch(e){}
+}
+window.addEventListener("resize", avisarAltura);
+
+function error(msg){
+  document.getElementById("app").innerHTML =
+    `<p class="aviso"><b>No se han podido cargar los datos.</b><br>${esc(msg)}</p>`;
+  avisarAltura();
+}
+
+(async () => {
+  try {
+    const r = await fetch(ORIGEN + (ORIGEN.includes("?") ? "&" : "?") + "v=" + Date.now(), {cache:"no-store"});
+    if (!r.ok) throw new Error("El servidor respondió " + r.status);
+    const d = await r.json();
+    pinta(d, EQUIPO || new URLSearchParams(location.search).get("equipo") || "");
+  } catch (e){
+    error(e.message);
+  }
+})();
+</script>
+</body></html>
