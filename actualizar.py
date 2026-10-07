@@ -686,6 +686,7 @@ BASKET = OrderedDict([
     ("17641", ("bal-junior-femenino", "Junior Femenino Preferente")),
     ("17745", ("bal-infantil-masculino", "Infantil Masculino Preferente")),
     ("17804", ("bal-alevin-femenino", "Alevín Femenino 1º año — Liga Marco Aldany")),
+    ("17875", ("bal-sub22-femenino", "Sub 22 Femenina — Primera 2ª División")),
 ])
 
 
