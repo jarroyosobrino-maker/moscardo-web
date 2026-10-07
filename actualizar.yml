@@ -1,0 +1,111 @@
+name: Actualizar resultados
+
+# Los partidos son de sabado y domingo, y la RFFM designa horarios entre
+# semana, asi que se ejecuta dos veces al dia. Las horas son UTC:
+# 06:25 y 18:25 UTC = 08:25 y 20:25 en Madrid (verano), 07:25 y 19:25 (invierno).
+on:
+  schedule:
+    - cron: "25 6,18 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Solo decir que cambiaria, sin escribir ni publicar"
+        type: boolean
+        default: false
+      sin_goleadores:
+        description: "Saltarse Flashscore (mas rapido)"
+        type: boolean
+        default: false
+
+# Necesario para que el workflow pueda hacer commit en el repo.
+permissions:
+  contents: write
+
+# Si se solapan dos ejecuciones, la nueva espera en vez de pisar a la otra.
+concurrency:
+  group: actualizar-resultados
+  cancel-in-progress: false
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Descargar el repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4 playwright
+
+      - name: Instalar el navegador para los goleadores
+        if: ${{ inputs.sin_goleadores != true }}
+        run: python -m playwright install --with-deps chromium
+
+      - name: Actualizar los JSON
+        id: actualizar
+        run: |
+          python actualizar.py \
+            ${{ inputs.dry_run == true && '--dry-run' || '' }} \
+            ${{ inputs.sin_goleadores == true && '--sin-goleadores' || '' }} \
+            | tee salida.log
+        continue-on-error: true
+
+      - name: Publicar los cambios
+        if: ${{ inputs.dry_run != true }}
+        run: |
+          set -e
+          # Por si acaso: no publicar nada que no sea JSON valido.
+          for f in datos.json spinola-resultados.json spinola-baloncesto.json; do
+            if [ -f "$f" ]; then
+              python -m json.tool "$f" > /dev/null || { echo "$f no es JSON valido"; exit 1; }
+            fi
+          done
+
+          # Solo estos tres ficheros, nada mas.
+          git add -- datos.json spinola-resultados.json spinola-baloncesto.json
+
+          if git diff --cached --quiet; then
+            echo "Sin novedades: no hay nada que publicar."
+            exit 0
+          fi
+
+          echo "Ficheros que cambian:"
+          git diff --cached --name-only
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Actualiza resultados ($(git diff --cached --name-only | tr '\n' ' '))"
+
+          # Jesus puede haber subido algo a mano entre medias.
+          for i in 1 2 3; do
+            git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            echo "Reintento $i"
+            sleep 10
+          done
+          echo "No pude publicar tras 3 intentos"
+          exit 1
+
+      - name: Guardar el registro de la ejecucion
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: registro
+          path: salida.log
+          retention-days: 30
+
+      - name: Fallar si alguna fuente dio error
+        if: ${{ steps.actualizar.outcome == 'failure' }}
+        run: |
+          echo "Alguna de las tres partes fallo. Mira el registro de arriba:"
+          echo "los equipos cuya fuente fallo conservan sus datos anteriores,"
+          echo "asi que la web sigue mostrando lo ultimo bueno."
+          exit 1
