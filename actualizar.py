@@ -721,7 +721,9 @@ def escudo(u):
 
 
 def goles_acta(g, spinola_local):
-    """Acta -> {"nuestros": [[jugador, minuto, tipo], ...], "rivales": [...]}."""
+    """Acta -> {"nuestros": [[jugador, minuto, tipo], ...], "rivales": [...]}: goles
+    apuntados a jugadores de cada equipo tal y como vienen en el acta (tipo 102 =
+    en propia puerta, cuenta para el equipo contrario)."""
     def lista(clave):
         return [[x.get("nombre_jugador", "").strip(), x.get("minuto", ""), x.get("tipo_gol", "")]
                 for x in (g.get(clave) or [])]
@@ -753,10 +755,12 @@ def goleadores_futsal(rffm, q, jugados_con_acta, antes):
         d = goles_acta(g, local)
         d["acta"] = str(codacta)
         por_jornada[str(jor)] = d
+    # tipo_gol 102 = en propia puerta: el acta lo apunta al jugador que lo marca,
+    # asi que no cuenta para su tabla de goleadores (y suma para el otro equipo)
     total = {}
     for d in por_jornada.values():
-        for jugador, _minuto, _tipo in d["nuestros"]:
-            if jugador:
+        for jugador, _minuto, tipo in d["nuestros"]:
+            if jugador and str(tipo) != "102":
                 total[jugador] = total.get(jugador, 0) + 1
     tabla = sorted(total.items(), key=lambda kv: (-kv[1], kv[0]))
     return por_jornada, [[j, n] for j, n in tabla]
