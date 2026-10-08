@@ -13,6 +13,15 @@ Uso:
   python actualizar.py --dry-run       solo dice que cambiaria, no escribe nada
   python actualizar.py --sin-goleadores  se salta Flashscore (no necesita Playwright)
   python actualizar.py --solo moscardo,futsal,basket   ejecuta solo esas partes
+  python actualizar.py --marcar-interrumpido   solo anota en el registro que la
+                                               ejecucion anterior se corto a medias
+
+Cada ejecucion deja constancia en el repositorio, haya novedades o no:
+  log/ejecuciones.jsonl  una linea JSON por ejecucion, la mas reciente al final
+  log/ultima.json        la ultima ejecucion, completa
+  ESTADO.md              el mismo resumen en texto legible
+Asi se puede saber desde fuera si la tarea programada corrio, sin entrar en
+GitHub Actions. En --dry-run no se escribe nada de esto.
 
 Codigo de salida:
   0  todo bien (con o sin cambios)
@@ -109,6 +118,126 @@ def escribe(nombre, texto, dry):
     with open(ruta, "w", encoding="utf-8") as f:
         f.write(texto)
     log("  escrito %s (%d bytes)" % (nombre, len(texto)))
+
+
+# ----------------------------------------------------------------------------
+# registro de ejecuciones
+# ----------------------------------------------------------------------------
+
+DIR_LOG = os.path.join(RAIZ, "log")
+JSONL = os.path.join(DIR_LOG, "ejecuciones.jsonl")
+ULTIMA = os.path.join(DIR_LOG, "ultima.json")
+ESTADO_MD = os.path.join(RAIZ, "ESTADO.md")
+
+# Dos ejecuciones al dia: 400 lineas son mas de medio ano de historia.
+MAX_LINEAS = 400
+
+
+def url_ejecucion():
+    """Enlace a esta ejecucion de GitHub Actions ("" si corre fuera de Actions)."""
+    repo = os.environ.get("GITHUB_REPOSITORY")
+    run = os.environ.get("GITHUB_RUN_ID")
+    if not repo or not run:
+        return ""
+    servidor = os.environ.get("GITHUB_SERVER_URL", "https://github.com")
+    return "%s/%s/actions/runs/%s" % (servidor, repo, run)
+
+
+def _estado(cambios, fallos_, partes):
+    if fallos_:
+        # Si alguna parte salio bien pese a los fallos, es parcial, no fallo total.
+        buenas = [p for p, v in partes.items() if v in ("ok", "sin-cambios")]
+        return "parcial" if buenas else "fallo"
+    return "ok" if cambios else "sin-cambios"
+
+
+def entrada(cambios, partes, estado=None):
+    """Construye el objeto que se guarda en el registro."""
+    ahora = datetime.now(MADRID) if MADRID else datetime.now()
+    return OrderedDict([
+        ("ts", ahora.strftime("%Y-%m-%dT%H:%M:%S%z") or ahora.isoformat()),
+        ("estado", estado or _estado(cambios, fallos, partes)),
+        ("cambios", list(cambios)),
+        ("partes", OrderedDict(partes)),
+        ("avisos", list(avisos)),
+        ("fallos", list(fallos)),
+        ("url", url_ejecucion()),
+        ("run", os.environ.get("GITHUB_RUN_ID", "")),
+        # "schedule" = la corrio el cron; "workflow_dispatch" = a mano.
+        ("disparo", os.environ.get("GITHUB_EVENT_NAME", "local")),
+    ])
+
+
+def texto_estado(e):
+    """ESTADO.md: lo mismo que la entrada, pero para leerlo de un vistazo."""
+    lineas = [
+        "# Estado de la actualizacion automatica",
+        "",
+        "Fichero generado por `actualizar.py`. No editar a mano.",
+        "",
+        "- **Ultima ejecucion:** %s" % e["ts"],
+        "- **Estado:** %s" % e["estado"],
+        "- **Ficheros con novedades:** %s" % (", ".join(e["cambios"]) or "ninguno"),
+        "- **Partes:** %s" % (", ".join("%s (%s)" % (k, v)
+                                        for k, v in e["partes"].items()) or "sin datos"),
+    ]
+    if e["url"]:
+        lineas.append("- **Ejecucion en GitHub Actions:** %s" % e["url"])
+    for titulo, clave in (("Avisos", "avisos"), ("Fallos", "fallos")):
+        if e[clave]:
+            lineas += ["", "## %s (%d)" % (titulo, len(e[clave]))]
+            lineas += ["- %s" % x for x in e[clave]]
+    return "\n".join(lineas) + "\n"
+
+
+def guarda_registro(e, dry=False):
+    """Anade la entrada al JSONL y regenera ultima.json y ESTADO.md.
+
+    Nunca puede tumbar la ejecucion: si falla el registro, se avisa y ya.
+    """
+    if dry:
+        log("  [dry-run] NO se escribe el registro (estado: %s)" % e["estado"])
+        return
+    try:
+        if not os.path.isdir(DIR_LOG):
+            os.makedirs(DIR_LOG)
+
+        linea = json.dumps(e, ensure_ascii=False) + "\n"
+        with open(JSONL, "a", encoding="utf-8") as f:
+            f.write(linea)
+
+        # Recorta el historico para que el fichero no crezca sin fin.
+        with open(JSONL, encoding="utf-8") as f:
+            lineas = [l for l in f if l.strip()]
+        if len(lineas) > MAX_LINEAS:
+            with open(JSONL, "w", encoding="utf-8") as f:
+                f.writelines(lineas[-MAX_LINEAS:])
+
+        with open(ULTIMA, "w", encoding="utf-8") as f:
+            json.dump(e, f, ensure_ascii=False, indent=1)
+            f.write("\n")
+
+        with open(ESTADO_MD, "w", encoding="utf-8") as f:
+            f.write(texto_estado(e))
+
+        log("  registro guardado (estado: %s)" % e["estado"])
+    except Exception as exc:
+        log("  no pude guardar el registro: %s" % exc)
+
+
+def ya_registrada(run):
+    """True si esta ejecucion de Actions ya dejo su linea en el registro."""
+    if not run or not os.path.exists(JSONL):
+        return False
+    try:
+        with open(JSONL, encoding="utf-8") as f:
+            lineas = [l for l in f if l.strip()]
+        for l in reversed(lineas[-10:]):
+            if json.loads(l).get("run") == run:
+                return True
+    except Exception:
+        pass
+    return False
 
 
 # ----------------------------------------------------------------------------
@@ -859,7 +988,20 @@ def main():
                     help="se salta Flashscore (no necesita Playwright)")
     ap.add_argument("--solo", default="moscardo,futsal,basket",
                     help="partes a ejecutar, separadas por comas")
+    ap.add_argument("--marcar-interrumpido", action="store_true",
+                    help="no actualiza nada: solo anota que la ejecucion se corto")
     ARGS = ap.parse_args()
+
+    # El workflow lo llama cuando el script anterior murio sin dejar rastro
+    # (timeout del job, el runner se quedo sin memoria, cancelacion...).
+    if ARGS.marcar_interrumpido:
+        if ya_registrada(os.environ.get("GITHUB_RUN_ID", "")):
+            log("la ejecucion ya dejo su linea en el registro: no toco nada")
+            return 0
+        fallo("la ejecucion se corto antes de terminar (mira el registro de Actions)")
+        guarda_registro(entrada([], OrderedDict(), estado="interrumpido"))
+        return 0
+
     partes_a_hacer = [p.strip() for p in ARGS.solo.split(",") if p.strip()]
 
     log("=== %s ===" % datetime.now(MADRID).strftime("%Y-%m-%d %H:%M %Z")
@@ -867,27 +1009,29 @@ def main():
 
     rffm = RFFM()
     cambios = []
+    partes = OrderedDict([("moscardo", "omitido"), ("futsal", "omitido"),
+                          ("basket", "omitido")])
 
-    if "moscardo" in partes_a_hacer:
+    def corre(clave, fichero, etiqueta, funcion):
+        """Ejecuta una parte y anota como le fue, sin cortar a las demas."""
+        if clave not in partes_a_hacer:
+            return
         try:
-            if parte_moscardo(rffm, ARGS.dry_run):
-                cambios.append("datos.json")
+            if funcion():
+                cambios.append(fichero)
+                partes[clave] = "ok"
+            else:
+                partes[clave] = "sin-cambios"
         except Exception as e:
-            fallo("parte A (Moscardo): %s" % e)
+            partes[clave] = "fallo"
+            fallo("%s: %s" % (etiqueta, e))
 
-    if "futsal" in partes_a_hacer:
-        try:
-            if parte_futsal(rffm, ARGS.dry_run):
-                cambios.append("spinola-resultados.json")
-        except Exception as e:
-            fallo("parte B (futbol sala): %s" % e)
-
-    if "basket" in partes_a_hacer:
-        try:
-            if parte_basket(ARGS.dry_run):
-                cambios.append("spinola-baloncesto.json")
-        except Exception as e:
-            fallo("parte C (baloncesto): %s" % e)
+    corre("moscardo", "datos.json", "parte A (Moscardo)",
+          lambda: parte_moscardo(rffm, ARGS.dry_run))
+    corre("futsal", "spinola-resultados.json", "parte B (futbol sala)",
+          lambda: parte_futsal(rffm, ARGS.dry_run))
+    corre("basket", "spinola-baloncesto.json", "parte C (baloncesto)",
+          lambda: parte_basket(ARGS.dry_run))
 
     log("")
     log("=== resumen ===")
@@ -901,6 +1045,11 @@ def main():
         for f in fallos:
             log("  - " + f)
 
+    # Deja constancia en el repositorio, haya novedades o no: la ausencia de
+    # una linea nueva es lo que permite saber desde fuera que la tarea no corrio.
+    e = entrada(cambios, partes)
+    guarda_registro(e, ARGS.dry_run)
+
     # deja el resultado a mano del workflow de GitHub Actions
     resumen = os.environ.get("GITHUB_OUTPUT")
     if resumen:
@@ -909,6 +1058,7 @@ def main():
             f.write("hay_cambios=%s\n" % ("true" if cambios else "false"))
             f.write("avisos=%d\n" % len(avisos))
             f.write("fallos=%d\n" % len(fallos))
+            f.write("estado=%s\n" % e["estado"])
 
     if fallos:
         return 2 if cambios else 1
