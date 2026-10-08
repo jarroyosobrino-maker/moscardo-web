@@ -746,6 +746,8 @@ def equipo_futsal(rffm, cfg, n=6):
                    "&".join("%s=%s" % kv for kv in q.items())),
         ("tabla", tabla), ("ultimos", jug[-n:]),
         ("proximo", pen[0] if pen else None), ("total_jugados", len(jug)),
+        # calendario completo: lo usa la web HTML (cdspinolachamartin.es); Wix lo ignora
+        ("partidos", ps),
     ])
 
 
@@ -885,7 +887,7 @@ def parte_basket(dry):
         grupos[g] = dict(competicion=txt(pest), tabla=[], ultimos=jug[-6:],
                          proximo=pen[0] if pen else None, total_jugados=len(jug),
                          jornada=jug[-1][0] if jug else "0",
-                         fecha=jug[-1][1] if jug else "")
+                         fecha=jug[-1][1] if jug else "", partidos=ps)
 
     # --- clasificaciones
     rc = doc.find(id="resultadosClasificaciones")
@@ -971,6 +973,8 @@ def objeto_basket(gcod, datos, slug, nombre):
         ("temp", "2026-2027"), ("fuente", FBM_URL),
         ("tabla", datos["tabla"]), ("ultimos", datos["ultimos"]),
         ("proximo", datos["proximo"]), ("total_jugados", datos["total_jugados"]),
+        # calendario completo: lo usa la web HTML (cdspinolachamartin.es); Wix lo ignora
+        ("partidos", datos.get("partidos", [])),
     ])
 
 
