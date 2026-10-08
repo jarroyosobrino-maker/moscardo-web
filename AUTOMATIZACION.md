@@ -51,6 +51,11 @@ completo. Wix no lo usa; lo lee la web HTML del club (cdspinolachamartin.es,
 `js/resultados.js` en el repositorio menta-webs) para pintar calendario,
 clasificación y el selector de partidos de la portada.
 
+Los equipos de fútbol sala llevan también `goleadores` (goles del Spínola y del
+rival en cada jornada, sacados del acta de la RFFM: `/acta-partido/<codacta>`) y
+`goleadores_temporada` (tabla de goleadores del Spínola). Las actas cerradas ya
+leídas no se vuelven a pedir.
+
 Las tres partes son independientes: **si una falla, las otras se publican
 igual**. Un equipo cuya fuente falle conserva sus datos anteriores, así que
 la web nunca se queda en blanco.

@@ -292,6 +292,26 @@ class RFFM(object):
             time.sleep(4 * i)
         raise RuntimeError("la RFFM no devolvio %s para %s" % (clave, params))
 
+    def acta(self, codacta, params, intentos=2):
+        """Acta de un partido (/acta-partido/<codacta>): goles con jugador y minuto.
+        Devuelve pageProps.game o None si no hay acta todavia."""
+        for i in range(1, intentos + 1):
+            url = "%s/_next/data/%s/acta-partido/%s.json" % (
+                self.BASE, self.build_id(), codacta)
+            try:
+                r = self.s.get(url, params=params, timeout=120)
+                if r.status_code == 404:
+                    self._build = None
+                    continue
+                r.raise_for_status()
+                g = r.json().get("pageProps", {}).get("game")
+                if g and str(g.get("codacta")) == str(codacta):
+                    return g
+            except (ValueError, requests.RequestException) as e:
+                log("    acta %s: %s (intento %d/%d)" % (codacta, e, i, intentos))
+            time.sleep(3 * i)
+        return None
+
 
 # ----------------------------------------------------------------------------
 # PARTE A - CDC Moscardo (datos.json)
@@ -700,7 +720,49 @@ def escudo(u):
     return (u or "").replace(PREFIJO_ESCUDO, "").split("?")[0]
 
 
-def equipo_futsal(rffm, cfg, n=6):
+def goles_acta(g, spinola_local):
+    """Acta -> {"nuestros": [[jugador, minuto, tipo], ...], "rivales": [...]}."""
+    def lista(clave):
+        return [[x.get("nombre_jugador", "").strip(), x.get("minuto", ""), x.get("tipo_gol", "")]
+                for x in (g.get(clave) or [])]
+    loc, vis = lista("goles_equipo_local"), lista("goles_equipo_visitante")
+    return {"nuestros": loc if spinola_local else vis,
+            "rivales": vis if spinola_local else loc,
+            "cerrada": str(g.get("acta_cerrada")) == "1"}
+
+
+def goleadores_futsal(rffm, q, jugados_con_acta, antes):
+    """Goles del Spinola por jornada (de las actas) y tabla de goleadores de la
+    temporada. Reutiliza las actas cerradas ya publicadas para no pedirlas otra vez."""
+    previos = (antes or {}).get("goleadores") or {}
+    por_jornada = OrderedDict()
+    params = dict(q, delegacion="")
+    for jor, codacta, local in jugados_con_acta:
+        prev = previos.get(str(jor))
+        if prev and prev.get("cerrada") and str(prev.get("acta")) == str(codacta):
+            por_jornada[str(jor)] = prev
+            continue
+        if not codacta:
+            continue
+        g = rffm.acta(codacta, params)
+        time.sleep(1)
+        if not g:
+            if prev:
+                por_jornada[str(jor)] = prev
+            continue
+        d = goles_acta(g, local)
+        d["acta"] = str(codacta)
+        por_jornada[str(jor)] = d
+    total = {}
+    for d in por_jornada.values():
+        for jugador, _minuto, _tipo in d["nuestros"]:
+            if jugador:
+                total[jugador] = total.get(jugador, 0) + 1
+    tabla = sorted(total.items(), key=lambda kv: (-kv[1], kv[0]))
+    return por_jornada, [[j, n] for j, n in tabla]
+
+
+def equipo_futsal(rffm, cfg, n=6, antes=None):
     q = OrderedDict([("temporada", "22"), ("competicion", cfg["competicion"]),
                      ("grupo", cfg["grupo"]), ("tipojuego", "3")])
     st = rffm.data("clasificaciones", q, "standings")
@@ -718,6 +780,7 @@ def equipo_futsal(rffm, cfg, n=6):
         ])
 
     ps = []
+    actas = []                              # (jornada, codacta, spinola_local) de los jugados
     for j in (cal.get("rounds") or []):
         for m in (j.get("equipos") or []):
             L = str(m.get("codigo_equipo_local")) == cfg["codequipo"]
@@ -734,9 +797,17 @@ def equipo_futsal(rffm, cfg, n=6):
                        None if gl == "" else int(gl),
                        None if gv == "" else int(gv),
                        1 if L else 0])
+            if gl != "":
+                actas.append((j.get("codjornada"), m.get("codacta"), L))
 
     jug = [p for p in ps if p[8] is not None]
     pen = [p for p in ps if p[8] is None]
+    try:
+        gol_j, gol_t = goleadores_futsal(rffm, q, actas, antes)
+    except Exception as e:                     # sin actas, el resto del equipo se publica igual
+        aviso("%s: no pude leer las actas (%s)" % (cfg["slug"], e))
+        gol_j = (antes or {}).get("goleadores") or OrderedDict()
+        gol_t = (antes or {}).get("goleadores_temporada") or []
     return OrderedDict([
         ("slug", cfg["slug"]), ("nombre", cfg["nombre"]),
         ("deporte", "Fútbol sala"), ("comp", st.get("competicion")),
@@ -748,6 +819,8 @@ def equipo_futsal(rffm, cfg, n=6):
         ("proximo", pen[0] if pen else None), ("total_jugados", len(jug)),
         # calendario completo: lo usa la web HTML (cdspinolachamartin.es); Wix lo ignora
         ("partidos", ps),
+        # goles del Spinola por jornada (actas de la RFFM) y tabla de goleadores; Wix lo ignora
+        ("goleadores", gol_j), ("goleadores_temporada", gol_t),
     ])
 
 
@@ -762,7 +835,7 @@ def parte_futsal(rffm, dry):
     for cfg in FUTSAL:                      # de uno en uno: en paralelo da null
         log("  %s" % cfg["slug"])
         try:
-            equipos.append(equipo_futsal(rffm, cfg))
+            equipos.append(equipo_futsal(rffm, cfg, antes=antes.get(cfg["slug"])))
         except Exception as e:
             if cfg["slug"] in antes:
                 fallo("%s: %s. Conservo los datos publicados."
