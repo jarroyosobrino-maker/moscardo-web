@@ -59,8 +59,16 @@ jobs:
             | tee salida.log
         continue-on-error: true
 
+      # Si el script se corto a medias (timeout del job, el runner sin memoria,
+      # cancelacion) no llego a escribir su linea del registro. Esto la escribe
+      # para que desde fuera se vea que la ejecucion existio y como acabo.
+      # Si el script si la escribio, este paso no hace nada.
+      - name: Anotar la ejecucion si se corto a medias
+        if: ${{ always() && inputs.dry_run != true }}
+        run: python actualizar.py --marcar-interrumpido
+
       - name: Publicar los cambios
-        if: ${{ inputs.dry_run != true }}
+        if: ${{ always() && inputs.dry_run != true }}
         run: |
           set -e
           # Por si acaso: no publicar nada que no sea JSON valido.
@@ -70,20 +78,31 @@ jobs:
             fi
           done
 
-          # Solo estos tres ficheros, nada mas.
+          # Los tres JSON de datos y el registro de la ejecucion, nada mas.
           git add -- datos.json spinola-resultados.json spinola-baloncesto.json
+          DATOS=$(git diff --cached --name-only | tr '\n' ' ')
+
+          git add -- log/ejecuciones.jsonl log/ultima.json ESTADO.md
 
           if git diff --cached --quiet; then
-            echo "Sin novedades: no hay nada que publicar."
+            echo "Nada que publicar (ni datos ni registro)."
             exit 0
           fi
 
           echo "Ficheros que cambian:"
           git diff --cached --name-only
 
+          # El registro cambia en cada ejecucion, aunque no haya novedades: es
+          # justo lo que permite saber desde fuera que la tarea corrio.
+          if [ -n "$DATOS" ]; then
+            MENSAJE="Actualiza resultados ($DATOS)"
+          else
+            MENSAJE="Registro de ejecucion (sin novedades en los datos)"
+          fi
+
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "Actualiza resultados ($(git diff --cached --name-only | tr '\n' ' '))"
+          git commit -m "$MENSAJE"
 
           # Jesus puede haber subido algo a mano entre medias.
           for i in 1 2 3; do
