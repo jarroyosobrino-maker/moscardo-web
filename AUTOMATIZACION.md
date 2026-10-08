@@ -46,6 +46,11 @@ Si algo falla, el registro completo queda guardado 30 días como artefacto
 | B | `spinola-resultados.json` | RFFM (los 4 equipos de fútbol sala) |
 | C | `spinola-baloncesto.json` | FBM (ficha del club) |
 
+Los equipos del Spínola llevan además el campo `partidos` con el calendario
+completo. Wix no lo usa; lo lee la web HTML del club (cdspinolachamartin.es,
+`js/resultados.js` en el repositorio menta-webs) para pintar calendario,
+clasificación y el selector de partidos de la portada.
+
 Las tres partes son independientes: **si una falla, las otras se publican
 igual**. Un equipo cuya fuente falle conserva sus datos anteriores, así que
 la web nunca se queda en blanco.
