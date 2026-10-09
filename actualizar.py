@@ -929,6 +929,8 @@ CANTERA = [
 SIN_PAGINA = {"85": "primer equipo (va en datos.json)",
               "10336705": "debutante (sin competicion)"}
 
+DESCANSO = re.compile(r"no asignado|descansa", re.I)
+
 PARTICULAS = {"de", "del", "la", "las", "los", "y", "e", "da", "do", "dos", "van", "von"}
 
 
@@ -1034,7 +1036,9 @@ def equipo_cantera(rffm, cfg):
                   % (cfg["slug"], cod))
 
     jug = [p for p in partidos if p[8] is not None]
-    pen = [p for p in partidos if p[8] is None]
+    # 'Equipo Fuera (No asignado)' es una jornada de descanso, no un partido
+    pen = [p for p in partidos if p[8] is None and not DESCANSO.search(
+        "%s %s" % (p[4] or "", p[5] or ""))]
     return OrderedDict([
         ("slug", cfg["slug"]), ("nombre", cfg["nombre"]), ("seccion", cfg["seccion"]),
         ("codequipo", cod), ("categoria", (f.get("categoria") or "").strip()),
