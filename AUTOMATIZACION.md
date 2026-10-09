@@ -45,6 +45,13 @@ Si algo falla, el registro completo queda guardado 30 días como artefacto
 | A | `datos.json` | RFFM (grupo 7 de Tercera Federación) + Flashscore para los goleadores |
 | B | `spinola-resultados.json` | RFFM (los 4 equipos de fútbol sala) |
 | C | `spinola-baloncesto.json` | FBM (ficha del club) |
+| D | `moscardo-cantera.json` | RFFM (fichas de equipo, clasificación y calendario de los 25 equipos de cantera y filiales del Moscardó) |
+
+`moscardo-cantera.json` **solo lo lee la web HTML del Moscardó** (`CDC Moscardo/assets/js/equipo.js`
+en menta-webs): una página por equipo con cuerpo técnico, jugadores, resultados,
+clasificación y próximo partido. Wix no lo usa y no hay que tocar nada en Wix.
+En cada ejecución la parte D también revisa las fichas de los dos clubes en la RFFM
+(1008 masculino y 15336175 femenino) y avisa si aparece un equipo nuevo o desaparece uno.
 
 Los equipos del Spínola llevan además el campo `partidos` con el calendario
 completo. Wix no lo usa; lo lee la web HTML del club (cdspinolachamartin.es,
@@ -56,7 +63,7 @@ rival en cada jornada, sacados del acta de la RFFM: `/acta-partido/<codacta>`) y
 `goleadores_temporada` (tabla de goleadores del Spínola). Las actas cerradas ya
 leídas no se vuelven a pedir.
 
-Las tres partes son independientes: **si una falla, las otras se publican
+Las partes son independientes: **si una falla, las otras se publican
 igual**. Un equipo cuya fuente falle conserva sus datos anteriores, así que
 la web nunca se queda en blanco.
 
@@ -98,6 +105,9 @@ principio de las secciones de `actualizar.py`:
 - `COMP_M` y `EQUIPOS_M` — competición, grupo y los 18 equipos del Moscardó.
 - `FUTSAL` — los 4 equipos de fútbol sala, con su competición, grupo y código.
 - `BASKET` — los grupos de la FBM y sus slugs de Wix.
+- `CANTERA` — los equipos de cantera del Moscardó: código de equipo, competición,
+  grupo y tipo de juego (1 fútbol 11, 2 fútbol 7). El `slug` es el nombre de su
+  página en la web HTML (`equipo-<slug>.html`).
 
 Para la temporada que viene habrá que actualizar `temporada` (hoy `22`) y
 volver a buscar los códigos con

@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Actualiza los tres JSON que leen las webs de Wix del CDC Moscardo y del
-CD Spinola Chamartin:
+Actualiza los JSON que leen las webs del CDC Moscardo y del CD Spinola
+Chamartin:
 
   datos.json               calendario y clasificacion del CDC Moscardo (RFFM, grupo 7)
   spinola-resultados.json  los 4 equipos de futbol sala del Spinola (RFFM)
   spinola-baloncesto.json  los equipos de baloncesto del Spinola (FBM)
+  moscardo-cantera.json    los equipos de cantera del Moscardo (RFFM). Solo lo
+                           lee la web HTML del Moscardo; Wix no lo usa.
 
 Uso:
   python actualizar.py                 actualiza los ficheros si hay novedades
   python actualizar.py --dry-run       solo dice que cambiaria, no escribe nada
   python actualizar.py --sin-goleadores  se salta Flashscore (no necesita Playwright)
-  python actualizar.py --solo moscardo,futsal,basket   ejecuta solo esas partes
+  python actualizar.py --solo moscardo,futsal,basket,cantera   ejecuta solo esas partes
   python actualizar.py --marcar-interrumpido   solo anota en el registro que la
                                                ejecucion anterior se corto a medias
 
@@ -28,7 +30,7 @@ Codigo de salida:
   1  error general
   2  alguna parte fallo, pero las demas se escribieron
 
-Las tres partes son independientes: si una falla, las otras siguen.
+Las partes son independientes: si una falla, las otras siguen.
 Lo que el script NUNCA toca:
   - los goleadores ya escritos en datos.json (Jesus los revisa a mano)
   - el texto de las notas (solo retira las de jornadas ya jugadas)
@@ -880,6 +882,236 @@ def formato_lista(d, clave, antes):
 
 
 # ----------------------------------------------------------------------------
+# PARTE D - Cantera del CDC Moscardo (moscardo-cantera.json)
+# Solo la lee la web HTML (menta-webs/CDC Moscardo). Wix no la usa.
+# ----------------------------------------------------------------------------
+
+# Codigos de club en la RFFM: el masculino y el femenino van por separado.
+CLUBES_CANTERA = {"1008": "C.D. Colonia Moscardó",
+                  "15336175": "C.D.E. Femenino Moscardó"}
+
+# Equipos con pagina en la web HTML. El primer equipo (85) no va aqui: tiene
+# sus propias paginas y sale de datos.json. El orden manda en la web.
+# tj = tipo de juego (1 futbol 11, 2 futbol 7). grupo vacio = aun sin grupo.
+def _c(slug, nombre, seccion, cod, comp, grupo, tj):
+    return dict(slug=slug, nombre=nombre, seccion=seccion, codequipo=cod,
+                competicion=comp, grupo=grupo, tipojuego=tj)
+
+CANTERA = [
+    _c("moscardo-b", "Moscardó B", "Aficionado", "466796", "26737701", "26737704", "1"),
+    _c("moscardo-c", "Moscardó C", "Aficionado", "6796354", "26738300", "26738319", "1"),
+    _c("juvenil-a", "Juvenil A", "Juvenil", "86", "26737715", "26834942", "1"),
+    _c("juvenil-b", "Juvenil B", "Juvenil", "87", "26737724", "26737734", "1"),
+    _c("juvenil-c", "Juvenil C", "Juvenil", "15283750", "26737724", "26737735", "1"),
+    _c("juvenil-d", "Juvenil D", "Juvenil", "1031556", "26738323", "27131269", "1"),
+    _c("cadete-a", "Cadete A", "Cadete", "300276", "26737737", "26737740", "1"),
+    _c("cadete-b", "Cadete B", "Cadete", "375526", "26737751", "26737761", "1"),
+    _c("cadete-c", "Cadete C", "Cadete", "1031557", "26737768", "26737806", "1"),
+    _c("cadete-d", "Cadete D", "Cadete", "3365516", "26737768", "26737794", "1"),
+    _c("infantil-a", "Infantil A", "Infantil", "300679", "26737819", "26737825", "1"),
+    _c("infantil-b", "Infantil B", "Infantil", "371897", "26738324", "26738352", "1"),
+    _c("infantil-c", "Infantil C", "Infantil", "3361161", "26738324", "26738353", "1"),
+    _c("alevin-a-f11", "Alevín A F-11", "Alevín", "26750290", "26737859", "27325582", "1"),
+    _c("alevin-a-f7", "Alevín A F-7", "Alevín", "90", "26738132", "26738138", "2"),
+    _c("alevin-b", "Alevín B", "Alevín", "334070", "26738141", "26738153", "2"),
+    _c("alevin-c", "Alevín C", "Alevín", "15283757", "26738071", "26738116", "2"),
+    _c("benjamin-a", "Benjamín A", "Benjamín", "91", "26738158", "26748466", "2"),
+    _c("benjamin-b", "Benjamín B", "Benjamín", "300127", "26737943", "27602058", "2"),
+    _c("benjamin-c", "Benjamín C", "Benjamín", "1109391", "26737943", "27602058", "2"),
+    _c("prebenjamin-a", "Prebenjamín A", "Prebenjamín", "345241", "26738167", "26738181", "2"),
+    _c("prebenjamin-b", "Prebenjamín B", "Prebenjamín", "15283754", "26797573", "28156868", "2"),
+    _c("juvenil-femenino", "Juvenil Femenino", "Femenino", "26729858", "26737881", "26737886", "1"),
+    _c("alevin-femenino", "Alevín Femenino", "Femenino", "26729857", "26738071", "26738116", "2"),
+    _c("benjamin-femenino", "Benjamín Femenino", "Femenino", "26729859", "26737943", "27602058", "2"),
+]
+
+# Codigos que estan en la ficha del club pero no tienen pagina, a proposito.
+SIN_PAGINA = {"85": "primer equipo (va en datos.json)",
+              "10336705": "debutante (sin competicion)"}
+
+PARTICULAS = {"de", "del", "la", "las", "los", "y", "e", "da", "do", "dos", "van", "von"}
+
+
+def nombre_persona(crudo):
+    """'GARCIA FERNANDEZ, DIEGO' -> 'Diego Garcia Fernandez'
+    'SINYAN , MODOU' -> 'Modou Sinyan'. Respeta las tildes de la RFFM."""
+    crudo = re.sub(r"\s+", " ", (crudo or "").strip())
+    if "," in crudo:
+        ap, no = [t.strip() for t in crudo.split(",", 1)]
+        crudo = ("%s %s" % (no, ap)).strip()
+    sal = []
+    for i, w in enumerate(crudo.split(" ")):
+        lw = w.lower()
+        if i > 0 and lw in PARTICULAS:
+            sal.append(lw)
+        else:
+            sal.append("-".join(p[:1].upper() + p[1:] for p in lw.split("-")))
+    return " ".join(sal)
+
+
+def escudo_c(u):
+    """Ruta del escudo relativa a base_escudos: '/pnfg/pimg/Clubes/x.png'."""
+    u = (u or "").split("?")[0].strip()
+    return re.sub(r"^https?://appweb\.rffm\.es/*", "/", u) if u else ""
+
+
+def ficha_equipo(rffm, cod, intentos=3):
+    """pageProps.team de /fichaequipo/<cod>: tecnicos, jugadores, campo."""
+    for i in range(1, intentos + 1):
+        url = "%s/_next/data/%s/fichaequipo/%s.json" % (
+            rffm.BASE, rffm.build_id(), cod)
+        try:
+            r = rffm.s.get(url, timeout=120)
+            if r.status_code == 404:
+                rffm._build = None
+                continue
+            r.raise_for_status()
+            t = r.json().get("pageProps", {}).get("team")
+            if t and str(t.get("codigo_equipo")) == str(cod):
+                return t
+        except (ValueError, requests.RequestException) as e:
+            log("    ficha %s: %s (intento %d/%d)" % (cod, e, i, intentos))
+        time.sleep(3 * i)
+    raise RuntimeError("la RFFM no devolvio la ficha del equipo %s" % cod)
+
+
+def ficha_club(rffm, cod):
+    url = "%s/_next/data/%s/fichaclub/%s.json" % (rffm.BASE, rffm.build_id(), cod)
+    r = rffm.s.get(url, timeout=120)
+    r.raise_for_status()
+    return (r.json().get("pageProps", {}).get("club") or {})
+
+
+def equipo_cantera(rffm, cfg):
+    cod = cfg["codequipo"]
+    f = ficha_equipo(rffm, cod)
+    tecnicos = [nombre_persona(x.get("nombre")) for x in (f.get("tecnicos_equipo") or [])]
+    jugadores = sorted((nombre_persona(x.get("nombre"))
+                        for x in (f.get("jugadores_equipo") or [])),
+                       key=normaliza)
+
+    tabla, partidos, comp, grupo, jornada = [], [], None, None, None
+    q = None
+    if cfg["grupo"]:
+        q = OrderedDict([("temporada", "22"), ("competicion", cfg["competicion"]),
+                         ("grupo", cfg["grupo"]), ("tipojuego", cfg["tipojuego"])])
+        st = rffm.data("clasificaciones", q, "standings")
+        time.sleep(1)
+        cal = rffm.data("calendario", dict(q, equipo=cod), "calendar")
+        comp, grupo, jornada = st.get("competicion"), st.get("grupo"), st.get("jornada")
+
+        for t in (st.get("clasificacion") or []):
+            tabla.append([
+                int(t["posicion"]), t["nombre"], escudo_c(t.get("url_img")),
+                int(t["jugados"]), int(t["ganados"]), int(t["empatados"]),
+                int(t["perdidos"]), int(t["goles_a_favor"]), int(t["goles_en_contra"]),
+                int(t["puntos"]),
+                1 if str(t.get("codequipo")) == cod else 0,
+                "".join(r.get("tipo", "") for r in (t.get("racha_partidos") or [])),
+            ])
+        if tabla and not any(x[10] for x in tabla):
+            aviso("%s: el equipo %s no aparece en la clasificacion del grupo %s. "
+                  "Revisa si le han cambiado de grupo." % (cfg["slug"], cod, cfg["grupo"]))
+
+        for j in (cal.get("rounds") or []):
+            for m in (j.get("equipos") or []):
+                L = str(m.get("codigo_equipo_local")) == cod
+                V = str(m.get("codigo_equipo_visitante")) == cod
+                if not L and not V:
+                    continue
+                gl = str(m.get("goles_casa", "")).strip()
+                gv = str(m.get("goles_visitante", "")).strip()
+                partidos.append([
+                    int(j.get("codjornada") or 0), iso(m.get("fecha")) or "",
+                    (m.get("hora") or "").strip(), (m.get("campo") or "").strip(),
+                    m.get("equipo_local"), m.get("equipo_visitante"),
+                    escudo_c(m.get("escudo_equipo_local")),
+                    escudo_c(m.get("escudo_equipo_visitante")),
+                    None if gl == "" else int(gl), None if gv == "" else int(gv),
+                    1 if L else 0])
+        if not partidos and cal.get("rounds"):
+            aviso("%s: el calendario del grupo no trae partidos del equipo %s"
+                  % (cfg["slug"], cod))
+
+    jug = [p for p in partidos if p[8] is not None]
+    pen = [p for p in partidos if p[8] is None]
+    return OrderedDict([
+        ("slug", cfg["slug"]), ("nombre", cfg["nombre"]), ("seccion", cfg["seccion"]),
+        ("codequipo", cod), ("categoria", (f.get("categoria") or "").strip()),
+        ("comp", comp), ("grupo", grupo), ("jornada", jornada),
+        ("campo", (f.get("campo") or "").strip()),
+        ("fuente", ("https://www.rffm.es/competicion/clasificaciones?" +
+                    "&".join("%s=%s" % kv for kv in q.items())) if q else
+                   "https://www.rffm.es/fichaequipo/%s" % cod),
+        ("tecnicos", tecnicos), ("jugadores", jugadores),
+        ("tabla", tabla), ("partidos", partidos),
+        ("proximo", pen[0] if pen else None), ("total_jugados", len(jug)),
+    ])
+
+
+def revisa_clubes(rffm):
+    """Avisa si la RFFM tiene equipos del club que la web no recoge (o al reves)."""
+    conocidos = set(c["codequipo"] for c in CANTERA) | set(SIN_PAGINA)
+    vistos = set()
+    for club in CLUBES_CANTERA:
+        try:
+            eqs = ficha_club(rffm, club).get("equipos_club") or []
+        except Exception as e:
+            aviso("no pude leer la ficha del club %s: %s" % (club, e))
+            return
+        for e in eqs:
+            c = str(e.get("codigo_equipo"))
+            vistos.add(c)
+            if c not in conocidos and str(e.get("en_competicion")) == "1":
+                aviso("EQUIPO NUEVO en la RFFM: %s %s (codigo %s). Hay que anadirlo "
+                      "a CANTERA y crear su pagina en la web."
+                      % (e.get("categoria"), e.get("nombre_equipo"), c))
+        time.sleep(1)
+    for c in CANTERA:
+        if c["codequipo"] not in vistos:
+            aviso("%s (codigo %s) ya no aparece en la ficha del club en la RFFM"
+                  % (c["slug"], c["codequipo"]))
+
+
+def parte_cantera(rffm, dry):
+    log("PARTE D - Cantera del Moscardo (web HTML)")
+    actual = leer_json("moscardo-cantera.json") or OrderedDict(
+        [("generado", ""), ("base_escudos", "https://appweb.rffm.es"), ("equipos", [])])
+    antes = {e["slug"]: e for e in actual.get("equipos", [])}
+
+    revisa_clubes(rffm)
+
+    equipos = []
+    for cfg in CANTERA:                     # de uno en uno: en paralelo da null
+        log("  %s" % cfg["slug"])
+        try:
+            equipos.append(equipo_cantera(rffm, cfg))
+        except Exception as e:
+            if cfg["slug"] in antes:
+                fallo("%s: %s. Conservo los datos publicados." % (cfg["slug"], e))
+                equipos.append(antes[cfg["slug"]])
+            else:
+                fallo("%s: %s. No hay datos previos que conservar." % (cfg["slug"], e))
+        time.sleep(1)
+
+    nuevo = OrderedDict([("generado", hoy().isoformat()),
+                         ("base_escudos", "https://appweb.rffm.es"),
+                         ("equipos", equipos)])
+
+    if iguales(actual, nuevo, ignorar=("generado",)):
+        log("  sin novedades, no toco moscardo-cantera.json")
+        return False
+
+    for e in equipos:
+        pos = next((f[0] for f in e["tabla"] if f[10] == 1), None)
+        log("  %s: %s, jornada %s, %d jugadores" % (
+            e["slug"], pos and "%sº" % pos, e.get("jornada"), len(e["jugadores"])))
+    escribe("moscardo-cantera.json", formato_lista(nuevo, "equipos",
+            ["generado", "base_escudos"]), dry)
+    return True
+
+
+# ----------------------------------------------------------------------------
 # PARTE C - Spinola baloncesto (spinola-baloncesto.json)
 # ----------------------------------------------------------------------------
 
@@ -1067,7 +1299,7 @@ def main():
                     help="dice que cambiaria pero no escribe nada")
     ap.add_argument("--sin-goleadores", action="store_true",
                     help="se salta Flashscore (no necesita Playwright)")
-    ap.add_argument("--solo", default="moscardo,futsal,basket",
+    ap.add_argument("--solo", default="moscardo,futsal,basket,cantera",
                     help="partes a ejecutar, separadas por comas")
     ap.add_argument("--marcar-interrumpido", action="store_true",
                     help="no actualiza nada: solo anota que la ejecucion se corto")
@@ -1091,7 +1323,7 @@ def main():
     rffm = RFFM()
     cambios = []
     partes = OrderedDict([("moscardo", "omitido"), ("futsal", "omitido"),
-                          ("basket", "omitido")])
+                          ("basket", "omitido"), ("cantera", "omitido")])
 
     def corre(clave, fichero, etiqueta, funcion):
         """Ejecuta una parte y anota como le fue, sin cortar a las demas."""
@@ -1113,6 +1345,8 @@ def main():
           lambda: parte_futsal(rffm, ARGS.dry_run))
     corre("basket", "spinola-baloncesto.json", "parte C (baloncesto)",
           lambda: parte_basket(ARGS.dry_run))
+    corre("cantera", "moscardo-cantera.json", "parte D (cantera Moscardo)",
+          lambda: parte_cantera(rffm, ARGS.dry_run))
 
     log("")
     log("=== resumen ===")

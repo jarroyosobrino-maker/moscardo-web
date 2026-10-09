@@ -72,14 +72,14 @@ jobs:
         run: |
           set -e
           # Por si acaso: no publicar nada que no sea JSON valido.
-          for f in datos.json spinola-resultados.json spinola-baloncesto.json; do
+          for f in datos.json spinola-resultados.json spinola-baloncesto.json moscardo-cantera.json; do
             if [ -f "$f" ]; then
               python -m json.tool "$f" > /dev/null || { echo "$f no es JSON valido"; exit 1; }
             fi
           done
 
-          # Los tres JSON de datos y el registro de la ejecucion, nada mas.
-          git add -- datos.json spinola-resultados.json spinola-baloncesto.json
+          # Los JSON de datos y el registro de la ejecucion, nada mas.
+          git add -- $(ls datos.json spinola-resultados.json spinola-baloncesto.json moscardo-cantera.json 2>/dev/null)
           DATOS=$(git diff --cached --name-only | tr '\n' ' ')
 
           git add -- log/ejecuciones.jsonl log/ultima.json ESTADO.md
