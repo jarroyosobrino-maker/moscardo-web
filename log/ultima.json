@@ -1,6 +1,6 @@
 {
- "ts": "2026-10-10T00:47:49+0200",
- "estado": "ok",
+ "ts": "2026-10-10T14:48:33+0200",
+ "estado": "parcial",
  "cambios": [
   "moscardo-cantera.json"
  ],
@@ -11,8 +11,11 @@
   "cantera": "ok"
  },
  "avisos": [],
- "fallos": [],
- "url": "https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/38000936339",
- "run": "38000936339",
+ "fallos": [
+  "juvenil-femenino: la RFFM no devolvio la ficha del equipo 26729858. Conservo los datos publicados.",
+  "benjamin-femenino: la RFFM no devolvio la ficha del equipo 26729859. Conservo los datos publicados."
+ ],
+ "url": "https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/38053098488",
+ "run": "38053098488",
  "disparo": "schedule"
 }
