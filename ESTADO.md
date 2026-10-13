@@ -2,11 +2,26 @@
 
 Fichero generado por `actualizar.py`. No editar a mano.
 
-- **Ultima ejecucion:** 2026-10-13T02:54:04+0200
+- **Ultima ejecucion:** 2026-10-13T16:36:23+0200
 - **Estado:** parcial
-- **Ficheros con novedades:** spinola-resultados.json
-- **Partes:** moscardo (sin-cambios), futsal (ok), basket (sin-cambios), cantera (sin-cambios)
-- **Ejecucion en GitHub Actions:** https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/38329306842
+- **Ficheros con novedades:** spinola-resultados.json, spinola-baloncesto.json
+- **Partes:** moscardo (sin-cambios), futsal (ok), basket (ok), cantera (sin-cambios)
+- **Ejecucion en GitHub Actions:** https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/38413130069
 
-## Fallos (1)
-- alevin-a-f11: la RFFM no devolvio la ficha del equipo 26750290. Conservo los datos publicados.
+## Fallos (16)
+- moscardo-b: la RFFM no devolvio la ficha del equipo 466796. Conservo los datos publicados.
+- moscardo-c: la RFFM no devolvio la ficha del equipo 6796354. Conservo los datos publicados.
+- cadete-a: la RFFM no devolvio la ficha del equipo 300276. Conservo los datos publicados.
+- cadete-b: la RFFM no devolvio la ficha del equipo 375526. Conservo los datos publicados.
+- infantil-b: la RFFM no devolvio la ficha del equipo 371897. Conservo los datos publicados.
+- infantil-c: la RFFM no devolvio la ficha del equipo 3361161. Conservo los datos publicados.
+- alevin-a-f7: la RFFM no devolvio standings para OrderedDict({'temporada': '22', 'competicion': '26738132', 'grupo': '26738138', 'tipojuego': '2'}). Conservo los datos publicados.
+- alevin-b: la RFFM no devolvio la ficha del equipo 334070. Conservo los datos publicados.
+- alevin-c: la RFFM no devolvio la ficha del equipo 15283757. Conservo los datos publicados.
+- benjamin-a: la RFFM no devolvio la ficha del equipo 91. Conservo los datos publicados.
+- benjamin-b: la RFFM no devolvio la ficha del equipo 300127. Conservo los datos publicados.
+- benjamin-c: la RFFM no devolvio la ficha del equipo 1109391. Conservo los datos publicados.
+- prebenjamin-a: la RFFM no devolvio la ficha del equipo 345241. Conservo los datos publicados.
+- prebenjamin-b: la RFFM no devolvio la ficha del equipo 15283754. Conservo los datos publicados.
+- juvenil-femenino: la RFFM no devolvio la ficha del equipo 26729858. Conservo los datos publicados.
+- benjamin-femenino: la RFFM no devolvio la ficha del equipo 26729859. Conservo los datos publicados.
