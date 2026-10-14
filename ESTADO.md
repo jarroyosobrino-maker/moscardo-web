@@ -2,20 +2,11 @@
 
 Fichero generado por `actualizar.py`. No editar a mano.
 
-- **Ultima ejecucion:** 2026-10-14T14:16:58+0200
+- **Ultima ejecucion:** 2026-10-14T23:52:33+0200
 - **Estado:** parcial
-- **Ficheros con novedades:** spinola-resultados.json, moscardo-cantera.json
-- **Partes:** moscardo (sin-cambios), futsal (ok), basket (sin-cambios), cantera (ok)
-- **Ejecucion en GitHub Actions:** https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/38561611389
+- **Ficheros con novedades:** moscardo-cantera.json
+- **Partes:** moscardo (sin-cambios), futsal (sin-cambios), basket (sin-cambios), cantera (ok)
+- **Ejecucion en GitHub Actions:** https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/38643178202
 
-## Fallos (10)
-- fs-preferente-aficionado: la RFFM no devolvio standings para OrderedDict({'temporada': '22', 'competicion': '26738246', 'grupo': '26738248', 'tipojuego': '3'}). Conservo los datos publicados.
-- moscardo-b: la RFFM no devolvio la ficha del equipo 466796. Conservo los datos publicados.
-- moscardo-c: la RFFM no devolvio la ficha del equipo 6796354. Conservo los datos publicados.
-- juvenil-b: la RFFM no devolvio la ficha del equipo 87. Conservo los datos publicados.
-- juvenil-c: la RFFM no devolvio la ficha del equipo 15283750. Conservo los datos publicados.
-- juvenil-d: la RFFM no devolvio la ficha del equipo 1031556. Conservo los datos publicados.
-- cadete-a: la RFFM no devolvio la ficha del equipo 300276. Conservo los datos publicados.
-- cadete-b: la RFFM no devolvio la ficha del equipo 375526. Conservo los datos publicados.
-- cadete-d: la RFFM no devolvio la ficha del equipo 3365516. Conservo los datos publicados.
-- prebenjamin-b: la RFFM no devolvio la ficha del equipo 15283754. Conservo los datos publicados.
+## Fallos (1)
+- juvenil-femenino: la RFFM no devolvio standings para OrderedDict({'temporada': '22', 'competicion': '26737881', 'grupo': '26737886', 'tipojuego': '1'}). Conservo los datos publicados.
