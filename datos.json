@@ -1,5 +1,5 @@
 {
- "actualizado": "11 de octubre de 2026",
+ "actualizado": "15 de octubre de 2026",
  "tras": "tras la jornada 6",
  "mi_equipo": "CD Colonia Moscardó",
  "notas": [["Horarios:", "los designa la RFFM semana a semana, por eso la mayoría aparecen todavía sin hora. La fecha de cada jornada es la oficial del calendario; algún partido puede adelantarse al sábado."], ["Jornada 34:", "el calendario oficial la sitúa el 9 de mayo de 2027, no el 5 como figuraba en el cartel del club."]],
@@ -11,7 +11,7 @@
   {"j": 5, "fecha": "2026-10-04", "local": true, "rival": "CF Pozuelo de Alarcón", "hora": "12:02", "gf": 5, "gc": 1, "goles": "Peñarando, 6'; Borja Sánchez, 12', 18', 56'; Zamorano, 26'"},
   {"j": 6, "fecha": "2026-10-10", "local": false, "rival": "Real Aranjuez CF", "hora": "16:30", "gf": 1, "gc": 1, "goles": "Mena, 28'"},
   {"j": 7, "fecha": "2026-10-18", "local": true, "rival": "CD Las Rozas", "hora": "12:00"},
-  {"j": 8, "fecha": "2026-10-25", "local": false, "rival": "Rayo Vallecano «B»"},
+  {"j": 8, "fecha": "2026-10-25", "local": false, "rival": "Rayo Vallecano «B»", "hora": "11:45"},
   {"j": 9, "fecha": "2026-11-01", "local": true, "rival": "AD Cala Pozuelo", "hora": "12:00"},
   {"j": 10, "fecha": "2026-11-08", "local": false, "rival": "CD Leganés «B»"},
   {"j": 11, "fecha": "2026-11-15", "local": true, "rival": "CD Galapagar"},
