@@ -1,6 +1,6 @@
 {
- "ts": "2026-10-14T23:52:33+0200",
- "estado": "parcial",
+ "ts": "2026-10-15T13:47:55+0200",
+ "estado": "ok",
  "cambios": [
   "moscardo-cantera.json"
  ],
@@ -11,10 +11,8 @@
   "cantera": "ok"
  },
  "avisos": [],
- "fallos": [
-  "juvenil-femenino: la RFFM no devolvio standings para OrderedDict({'temporada': '22', 'competicion': '26737881', 'grupo': '26737886', 'tipojuego': '1'}). Conservo los datos publicados."
- ],
- "url": "https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/38643178202",
- "run": "38643178202",
+ "fallos": [],
+ "url": "https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/38729610887",
+ "run": "38729610887",
  "disparo": "schedule"
 }
