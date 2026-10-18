@@ -1,6 +1,6 @@
 {
  "actualizado": "18 de octubre de 2026",
- "tras": "tras la jornada 6",
+ "tras": "tras la jornada 7",
  "mi_equipo": "CD Colonia Moscardó",
  "notas": [["Horarios:", "los designa la RFFM semana a semana, por eso la mayoría aparecen todavía sin hora. La fecha de cada jornada es la oficial del calendario; algún partido puede adelantarse al sábado."], ["Jornada 34:", "el calendario oficial la sitúa el 9 de mayo de 2027, no el 5 como figuraba en el cartel del club."]],
  "partidos": [
@@ -10,7 +10,7 @@
   {"j": 4, "fecha": "2026-09-27", "local": false, "rival": "CP Parla Escuela", "hora": "11:30", "gf": 2, "gc": 2, "goles": "Borja Sánchez, 40'; Recalde, 86'"},
   {"j": 5, "fecha": "2026-10-04", "local": true, "rival": "CF Pozuelo de Alarcón", "hora": "12:02", "gf": 5, "gc": 1, "goles": "Peñarando, 6'; Borja Sánchez, 12', 18', 56'; Zamorano, 26'"},
   {"j": 6, "fecha": "2026-10-10", "local": false, "rival": "Real Aranjuez CF", "hora": "16:30", "gf": 1, "gc": 1, "goles": "Mena, 28'"},
-  {"j": 7, "fecha": "2026-10-18", "local": true, "rival": "CD Las Rozas", "hora": "12:00"},
+  {"j": 7, "fecha": "2026-10-18", "local": true, "rival": "CD Las Rozas", "hora": "12:00", "gf": 1, "gc": 1, "goles": "Leiton D, 8'"},
   {"j": 8, "fecha": "2026-10-25", "local": false, "rival": "Rayo Vallecano «B»", "hora": "11:45"},
   {"j": 9, "fecha": "2026-11-01", "local": true, "rival": "AD Cala Pozuelo", "hora": "12:00"},
   {"j": 10, "fecha": "2026-11-08", "local": false, "rival": "CD Leganés «B»"},
@@ -40,23 +40,23 @@
   {"j": 34, "fecha": "2027-05-09", "local": true, "rival": "CF Fuenlabrada"}
  ],
  "clasificacion": [
+  {"equipo": "CD Las Rozas", "pts": 14, "pj": 7, "g": 4, "e": 2, "p": 1, "gf": 16, "gc": 9},
   {"equipo": "CD Móstoles URJC", "pts": 14, "pj": 7, "g": 4, "e": 2, "p": 1, "gf": 10, "gc": 4},
-  {"equipo": "CD Las Rozas", "pts": 13, "pj": 6, "g": 4, "e": 1, "p": 1, "gf": 15, "gc": 8},
-  {"equipo": "CD Colonia Moscardó", "pts": 12, "pj": 6, "g": 3, "e": 3, "p": 0, "gf": 15, "gc": 6},
-  {"equipo": "AD Cala Pozuelo", "pts": 12, "pj": 6, "g": 4, "e": 0, "p": 2, "gf": 10, "gc": 8},
+  {"equipo": "CD Colonia Moscardó", "pts": 13, "pj": 7, "g": 3, "e": 4, "p": 0, "gf": 16, "gc": 7},
+  {"equipo": "AD Cala Pozuelo", "pts": 13, "pj": 7, "g": 4, "e": 1, "p": 2, "gf": 12, "gc": 10},
+  {"equipo": "AD Unión Adarve", "pts": 12, "pj": 7, "g": 3, "e": 3, "p": 1, "gf": 12, "gc": 9},
+  {"equipo": "CF Trival Valderas Alcorcón", "pts": 12, "pj": 7, "g": 3, "e": 3, "p": 1, "gf": 10, "gc": 7},
   {"equipo": "CF Pozuelo de Alarcón", "pts": 12, "pj": 7, "g": 3, "e": 3, "p": 1, "gf": 12, "gc": 13},
-  {"equipo": "CF Trival Valderas Alcorcón", "pts": 11, "pj": 6, "g": 3, "e": 2, "p": 1, "gf": 8, "gc": 5},
   {"equipo": "CD Galapagar", "pts": 11, "pj": 7, "g": 3, "e": 2, "p": 2, "gf": 13, "gc": 13},
+  {"equipo": "AD Torrejón", "pts": 10, "pj": 7, "g": 3, "e": 1, "p": 3, "gf": 11, "gc": 6},
+  {"equipo": "CD Leganés «B»", "pts": 10, "pj": 7, "g": 3, "e": 1, "p": 3, "gf": 13, "gc": 10},
   {"equipo": "CF Fuenlabrada", "pts": 9, "pj": 7, "g": 2, "e": 3, "p": 2, "gf": 9, "gc": 9},
-  {"equipo": "AD Unión Adarve", "pts": 9, "pj": 6, "g": 2, "e": 3, "p": 1, "gf": 8, "gc": 9},
-  {"equipo": "Rayo Ciudad Alcobendas CF", "pts": 8, "pj": 6, "g": 2, "e": 2, "p": 2, "gf": 12, "gc": 11},
-  {"equipo": "CD Leganés «B»", "pts": 7, "pj": 6, "g": 2, "e": 1, "p": 3, "gf": 11, "gc": 9},
-  {"equipo": "AD Torrejón", "pts": 7, "pj": 6, "g": 2, "e": 1, "p": 3, "gf": 7, "gc": 6},
-  {"equipo": "CP Parla Escuela", "pts": 6, "pj": 6, "g": 1, "e": 3, "p": 2, "gf": 9, "gc": 10},
+  {"equipo": "Rayo Ciudad Alcobendas CF", "pts": 8, "pj": 7, "g": 2, "e": 2, "p": 3, "gf": 13, "gc": 13},
   {"equipo": "México FC", "pts": 6, "pj": 7, "g": 1, "e": 3, "p": 3, "gf": 9, "gc": 11},
   {"equipo": "Real Aranjuez CF", "pts": 6, "pj": 7, "g": 1, "e": 3, "p": 3, "gf": 12, "gc": 16},
-  {"equipo": "Rayo Vallecano de Madrid «B»", "pts": 4, "pj": 6, "g": 1, "e": 1, "p": 4, "gf": 7, "gc": 13},
-  {"equipo": "Club Siello Nuevo Boadilla FC", "pts": 4, "pj": 6, "g": 1, "e": 1, "p": 4, "gf": 6, "gc": 14},
-  {"equipo": "UD San Sebastián de los Reyes «B»", "pts": 3, "pj": 6, "g": 1, "e": 0, "p": 5, "gf": 9, "gc": 17}
+  {"equipo": "CP Parla Escuela", "pts": 6, "pj": 7, "g": 1, "e": 3, "p": 3, "gf": 9, "gc": 14},
+  {"equipo": "UD San Sebastián de los Reyes «B»", "pts": 6, "pj": 7, "g": 2, "e": 0, "p": 5, "gf": 13, "gc": 20},
+  {"equipo": "Rayo Vallecano de Madrid «B»", "pts": 4, "pj": 7, "g": 1, "e": 1, "p": 5, "gf": 10, "gc": 17},
+  {"equipo": "Club Siello Nuevo Boadilla FC", "pts": 4, "pj": 7, "g": 1, "e": 1, "p": 5, "gf": 6, "gc": 18}
  ]
 }
