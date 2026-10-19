@@ -1,32 +1,19 @@
 {
- "ts": "2026-10-18T23:04:03+0200",
- "estado": "parcial",
+ "ts": "2026-10-19T13:26:59+0200",
+ "estado": "ok",
  "cambios": [
-  "datos.json",
   "spinola-resultados.json",
-  "spinola-baloncesto.json",
   "moscardo-cantera.json"
  ],
  "partes": {
-  "moscardo": "ok",
+  "moscardo": "sin-cambios",
   "futsal": "ok",
-  "basket": "ok",
+  "basket": "sin-cambios",
   "cantera": "ok"
  },
- "avisos": [
-  "el goleador 'Leiton D' no aparece en la plantilla oficial; uso el nombre de Flashscore."
- ],
- "fallos": [
-  "juvenil-d: la RFFM no devolvio la ficha del equipo 1031556. Conservo los datos publicados.",
-  "cadete-b: la RFFM no devolvio la ficha del equipo 375526. Conservo los datos publicados.",
-  "benjamin-c: la RFFM no devolvio la ficha del equipo 1109391. Conservo los datos publicados.",
-  "prebenjamin-a: la RFFM no devolvio la ficha del equipo 345241. Conservo los datos publicados.",
-  "prebenjamin-b: la RFFM no devolvio la ficha del equipo 15283754. Conservo los datos publicados.",
-  "juvenil-femenino: la RFFM no devolvio la ficha del equipo 26729858. Conservo los datos publicados.",
-  "alevin-femenino: la RFFM no devolvio la ficha del equipo 26729857. Conservo los datos publicados.",
-  "benjamin-femenino: la RFFM no devolvio la ficha del equipo 26729859. Conservo los datos publicados."
- ],
- "url": "https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/39165446139",
- "run": "39165446139",
- "disparo": "schedule"
+ "avisos": [],
+ "fallos": [],
+ "url": "https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/39244424992",
+ "run": "39244424992",
+ "disparo": "workflow_dispatch"
 }
