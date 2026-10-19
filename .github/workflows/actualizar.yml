@@ -2,11 +2,11 @@ name: Actualizar resultados
 
 # Los partidos son de sabado y domingo, y la RFFM designa horarios entre
 # semana, asi que se ejecuta dos veces al dia, a las 15:25 (partidos de la manana)
-# y a las 20:25 (partidos de la tarde), hora de Madrid, en verano y en invierno.
+# y a las 20:25 (partidos de la tarde), hora de Madrid en invierno (en verano, una hora mas tarde).
 on:
   schedule:
-    # 15:25 y 20:25 en Madrid todo el año: 13:25/18:25 UTC en verano, 14:25/19:25 UTC en invierno
-    - cron: "25 13,14,18,19 * * *"
+    # 14:25 y 19:25 UTC = 15:25 y 20:25 en Madrid en horario de invierno (en verano, una hora más tarde)
+    - cron: "25 14,19 * * *"
   workflow_dispatch:
     inputs:
       dry_run:
@@ -28,26 +28,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # GitHub solo entiende horas UTC: se programa a las dos horas UTC posibles (verano e
-  # invierno) y este paso deja seguir solo la que cae a las 15:25 o 20:25 en Madrid.
-  hora:
-    runs-on: ubuntu-latest
-    outputs:
-      ok: ${{ steps.h.outputs.ok }}
-    steps:
-      - id: h
-        run: |
-          h=$(TZ=Europe/Madrid date +%H)
-          echo "Hora en Madrid: $(TZ=Europe/Madrid date +%H:%M)"
-          if [ "${{ github.event_name }}" != "schedule" ] || [ "$h" = "15" ] || [ "$h" = "20" ]; then
-            echo "ok=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "ok=false" >> "$GITHUB_OUTPUT"
-          fi
-
   actualizar:
-    needs: hora
-    if: needs.hora.outputs.ok == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 25
 
