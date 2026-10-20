@@ -1,5 +1,5 @@
 {
- "ts": "2026-10-20T20:36:17+0200",
+ "ts": "2026-10-21T00:29:36+0200",
  "estado": "ok",
  "cambios": [
   "moscardo-cantera.json"
@@ -12,7 +12,7 @@
  },
  "avisos": [],
  "fallos": [],
- "url": "https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/39475870730",
- "run": "39475870730",
+ "url": "https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/39508244038",
+ "run": "39508244038",
  "disparo": "schedule"
 }
