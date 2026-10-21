@@ -2,8 +2,8 @@
 
 Fichero generado por `actualizar.py`. No editar a mano.
 
-- **Ultima ejecucion:** 2026-10-21T20:49:36+0200
-- **Estado:** ok
-- **Ficheros con novedades:** spinola-baloncesto.json, moscardo-cantera.json
-- **Partes:** moscardo (sin-cambios), futsal (sin-cambios), basket (ok), cantera (ok)
-- **Ejecucion en GitHub Actions:** https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/39655848713
+- **Ultima ejecucion:** 2026-10-22T00:34:31+0200
+- **Estado:** sin-cambios
+- **Ficheros con novedades:** ninguno
+- **Partes:** moscardo (sin-cambios), futsal (sin-cambios), basket (sin-cambios), cantera (sin-cambios)
+- **Ejecucion en GitHub Actions:** https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/39687235037
