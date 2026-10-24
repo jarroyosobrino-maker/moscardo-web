@@ -1,20 +1,30 @@
 {
- "ts": "2026-10-24T00:27:39+0200",
+ "ts": "2026-10-24T19:39:01+0200",
  "estado": "parcial",
  "cambios": [
+  "spinola-resultados.json",
+  "spinola-baloncesto.json",
   "moscardo-cantera.json"
  ],
  "partes": {
   "moscardo": "sin-cambios",
-  "futsal": "sin-cambios",
-  "basket": "sin-cambios",
+  "futsal": "ok",
+  "basket": "ok",
   "cantera": "ok"
  },
  "avisos": [],
  "fallos": [
-  "infantil-c: la RFFM no devolvio la ficha del equipo 3361161. Conservo los datos publicados."
+  "moscardo-b: la RFFM no devolvio la ficha del equipo 466796. Conservo los datos publicados.",
+  "moscardo-c: la RFFM no devolvio la ficha del equipo 6796354. Conservo los datos publicados.",
+  "alevin-a-f11: la RFFM no devolvio la ficha del equipo 26750290. Conservo los datos publicados.",
+  "alevin-a-f7: la RFFM no devolvio la ficha del equipo 90. Conservo los datos publicados.",
+  "alevin-b: la RFFM no devolvio la ficha del equipo 334070. Conservo los datos publicados.",
+  "alevin-c: la RFFM no devolvio la ficha del equipo 15283757. Conservo los datos publicados.",
+  "benjamin-b: la RFFM no devolvio standings para OrderedDict({'temporada': '22', 'competicion': '26737943', 'grupo': '27602058', 'tipojuego': '2'}). Conservo los datos publicados.",
+  "benjamin-c: la RFFM no devolvio standings para OrderedDict({'temporada': '22', 'competicion': '26737943', 'grupo': '27602058', 'tipojuego': '2'}). Conservo los datos publicados.",
+  "prebenjamin-a: la RFFM no devolvio la ficha del equipo 345241. Conservo los datos publicados."
  ],
- "url": "https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/40033496884",
- "run": "40033496884",
+ "url": "https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/40116409805",
+ "run": "40116409805",
  "disparo": "schedule"
 }
