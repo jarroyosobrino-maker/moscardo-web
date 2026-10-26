@@ -1,22 +1,24 @@
 {
- "ts": "2026-10-25T22:59:52+0100",
+ "ts": "2026-10-26T11:02:29+0100",
  "estado": "parcial",
  "cambios": [
+  "datos.json",
   "spinola-resultados.json",
   "moscardo-cantera.json"
  ],
  "partes": {
-  "moscardo": "sin-cambios",
+  "moscardo": "ok",
   "futsal": "ok",
   "basket": "sin-cambios",
   "cantera": "ok"
  },
  "avisos": [],
  "fallos": [
-  "benjamin-a: la RFFM no devolvio la ficha del equipo 91. Conservo los datos publicados.",
-  "juvenil-femenino: la RFFM no devolvio la ficha del equipo 26729858. Conservo los datos publicados."
+  "infantil-b: la RFFM no devolvio la ficha del equipo 371897. Conservo los datos publicados.",
+  "infantil-c: la RFFM no devolvio la ficha del equipo 3361161. Conservo los datos publicados.",
+  "benjamin-a: la RFFM no devolvio la ficha del equipo 91. Conservo los datos publicados."
  ],
- "url": "https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/40237828680",
- "run": "40237828680",
- "disparo": "schedule"
+ "url": "https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/40303697889",
+ "run": "40303697889",
+ "disparo": "workflow_dispatch"
 }

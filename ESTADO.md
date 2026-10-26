@@ -2,12 +2,13 @@
 
 Fichero generado por `actualizar.py`. No editar a mano.
 
-- **Ultima ejecucion:** 2026-10-25T22:59:52+0100
+- **Ultima ejecucion:** 2026-10-26T11:02:29+0100
 - **Estado:** parcial
-- **Ficheros con novedades:** spinola-resultados.json, moscardo-cantera.json
-- **Partes:** moscardo (sin-cambios), futsal (ok), basket (sin-cambios), cantera (ok)
-- **Ejecucion en GitHub Actions:** https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/40237828680
+- **Ficheros con novedades:** datos.json, spinola-resultados.json, moscardo-cantera.json
+- **Partes:** moscardo (ok), futsal (ok), basket (sin-cambios), cantera (ok)
+- **Ejecucion en GitHub Actions:** https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/40303697889
 
-## Fallos (2)
+## Fallos (3)
+- infantil-b: la RFFM no devolvio la ficha del equipo 371897. Conservo los datos publicados.
+- infantil-c: la RFFM no devolvio la ficha del equipo 3361161. Conservo los datos publicados.
 - benjamin-a: la RFFM no devolvio la ficha del equipo 91. Conservo los datos publicados.
-- juvenil-femenino: la RFFM no devolvio la ficha del equipo 26729858. Conservo los datos publicados.
