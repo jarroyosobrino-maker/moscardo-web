@@ -9,12 +9,14 @@ Chamartin:
   spinola-baloncesto.json  los equipos de baloncesto del Spinola (FBM)
   moscardo-cantera.json    los equipos de cantera del Moscardo (RFFM). Solo lo
                            lee la web HTML del Moscardo; Wix no lo usa.
+  spinola-municipal.json   los equipos municipales del Spinola (deportesweb.madrid.es)
 
 Uso:
   python actualizar.py                 actualiza los ficheros si hay novedades
   python actualizar.py --dry-run       solo dice que cambiaria, no escribe nada
-  python actualizar.py --sin-goleadores  se salta Flashscore (no necesita Playwright)
-  python actualizar.py --solo moscardo,futsal,basket,cantera   ejecuta solo esas partes
+  python actualizar.py --sin-goleadores  se salta Flashscore
+                                      (la parte municipal necesita Playwright igualmente)
+  python actualizar.py --solo moscardo,futsal,basket,cantera,municipal   ejecuta solo esas partes
   python actualizar.py --marcar-interrumpido   solo anota en el registro que la
                                                ejecucion anterior se corto a medias
 
@@ -1292,6 +1294,229 @@ def objeto_basket(gcod, datos, slug, nombre):
 
 
 # ----------------------------------------------------------------------------
+# PARTE E - Spinola municipales (spinola-municipal.json)
+# Juegos Deportivos Municipales del Ayuntamiento (deportesweb.madrid.es).
+# No hay API: la web es ASP.NET y todo va por postbacks construidos con
+# JavaScript, y sin sesion redirige a la sede electronica. Asi que se recorre
+# con Playwright igual que una persona: entrar como "No identificado" ->
+# "Consulta de clasificaciones" -> centro -> grupo -> jornadas.
+# ----------------------------------------------------------------------------
+
+MUNICIPAL_WEB = "https://deportesweb.madrid.es/DeportesWeb/login"
+MUNICIPAL_CENTRO = "Pradillo"               # Calle de Pradillo 33 (Chamartin)
+
+# El grupo se busca por su nombre en el desplegable; cod_grupo solo se usa para
+# avisar si el Ayuntamiento lo cambia (nueva temporada, grupos rehechos...).
+MUNICIPAL = [
+    dict(slug="mun-fs-senior-rojo",
+         nombre="Senior Masculino — Spínola Rojo",
+         grupo="JDM CHM FS SEN MAS SAB MAÑ 1", cod_grupo="30691",
+         equipo="SPINOLA CHAMARTIN ROJO"),
+    dict(slug="mun-fs-senior-blanco",
+         nombre="Senior Masculino — Spínola Blanco",
+         grupo="JDM CHM FS SEN MAS SAB MAÑ 2", cod_grupo="30692",
+         equipo="SPINOLA CHAMARTIN BLANCO"),
+]
+
+# Se ejecuta dentro de la pagina de clasificaciones con el centro ya elegido.
+# Elige el grupo y recorre las jornadas 1..actual con "Mostrar encuentros de
+# la jornada seleccionada y de la jornada siguiente" marcado (sin esa casilla
+# la web solo da la clasificacion). La jornada que la web trae seleccionada
+# por defecto es la ultima jugada. Probado a mano el 26/10/2026.
+JS_MUNICIPAL = r"""
+async ({grupo}) => {
+  const P = 'ContentFixedSection_uConsultarClasificaciones_uConsultarClasificacionesConsultar_';
+  const $id = s => document.getElementById(P + s);
+  const prm = Sys.WebForms.PageRequestManager.getInstance();
+  const espera = (disparar) => new Promise((ok, ko) => {
+    const t = setTimeout(() => { prm.remove_endRequest(fin); ko(new Error('la web no contesto (postback)')); }, 45000);
+    function fin(_s, a) {
+      clearTimeout(t); prm.remove_endRequest(fin);
+      const e = a.get_error && a.get_error();
+      if (e) { a.set_errorHandled(true); ko(new Error('postback: ' + e.message)); } else ok();
+    }
+    prm.add_endRequest(fin);
+    disparar();
+  });
+  const celdas = tr => [...tr.cells].map(td => td.innerText.replace(/\s+/g, ' ').trim());
+  const num = s => (s === '' || s == null || isNaN(parseInt(s, 10))) ? null : parseInt(s, 10);
+
+  const sg = $id('ddlGrupos');
+  const og = [...sg.options].find(o => o.text.trim() === grupo);
+  if (!og) throw new Error('no encuentro el grupo "' + grupo + '"; la web ofrece: ' +
+                           [...sg.options].map(o => o.text.trim()).filter(Boolean).join(', '));
+  const codGrupo = JSON.parse(og.value).COD_GRUPO;
+  sg.value = og.value;
+  await espera(() => sg.dispatchEvent(new Event('change')));
+
+  const sj = $id('ddlJornada');
+  const jornadas = [...sj.options].map(o => {
+    const m = o.text.match(/^(\d+)\s*\((\d{2}\/\d{2}\/\d{4})\)/);
+    return {value: o.value, n: m ? +m[1] : null, fecha: m ? m[2] : ''};
+  }).filter(j => j.n);
+  if (!jornadas.length) throw new Error('el grupo no tiene jornadas');
+  const actual = Math.min(Math.max(0, sj.selectedIndex), jornadas.length - 1);
+  const chk = $id('chkJornadaSiguiente');
+  if (chk && !chk.checked) chk.click();
+
+  const partidos = {};
+  let tabla = [];
+  for (let i = 0; i <= actual; i++) {
+    sj.value = jornadas[i].value;
+    await espera(() => $id('btnBuscar').click());
+    const tablas = [...document.querySelectorAll('table')];
+    // encuentros: 10 celdas (n, local, visitante, gl, -, gv, fecha, hora, campo, -)
+    tablas.filter(t => t.rows[1] && t.rows[1].cells.length === 10).forEach((t, k) => {
+      const j = jornadas[i + k];
+      if (!j) return;
+      [...t.rows].slice(1).forEach(tr => {
+        const c = celdas(tr);
+        if (/DESCANSA/i.test(c[1] + ' ' + c[2])) return;
+        partidos[j.n + '|' + c[1] + '|' + c[2]] =
+          [String(j.n), c[6] || j.fecha, c[7], c[8], c[1], c[2], num(c[3]), num(c[5])];
+      });
+    });
+    // clasificacion: 14 celdas (pos, equipo, pts, J, G, E, P, I, TF, TC, ...)
+    if (i === actual) {
+      const tc = tablas.find(t => t.rows[1] && t.rows[1].cells.length === 14);
+      tabla = tc ? [...tc.rows].slice(1).map(celdas).map(c =>
+        [parseInt(c[0], 10), c[1], +c[3], +c[4], +c[5], +c[6], +c[8], +c[9], +c[2]]) : [];
+    }
+  }
+  return {cod_grupo: String(codGrupo), jornada: jornadas[actual].n,
+          fecha: jornadas[actual].fecha, partidos: Object.values(partidos), tabla};
+}
+"""
+
+
+def es_nuestro(nombre, equipo):
+    return normaliza_texto(equipo) == " ".join(normaliza_texto(nombre).split())
+
+
+def objeto_municipal(cfg, crudo):
+    """Lo que devuelve JS_MUNICIPAL -> el objeto del equipo, con el mismo
+    formato de partido que el baloncesto:
+    [jornada, fecha, hora, campo, local, visitante, goles_local, goles_visitante, spinola_local]
+    tabla: [pos, equipo, J, G, E, P, TF, TC, puntos, es_spinola]"""
+    eq = cfg["equipo"].lower()
+    ps = []
+    for j, fecha, hora, campo, loc, vis, gl, gv in crudo["partidos"]:
+        L, V = es_nuestro(loc, eq), es_nuestro(vis, eq)
+        if L or V:
+            ps.append([j, fecha, hora, campo, loc, vis, gl, gv, 1 if L else 0])
+    ps.sort(key=lambda p: int(p[0]))
+    tabla = [f + [1 if es_nuestro(f[1], eq) else 0] for f in crudo["tabla"]]
+    if tabla and not any(f[-1] for f in tabla):
+        raise RuntimeError("el equipo '%s' no sale en la clasificacion del grupo"
+                           % cfg["equipo"])
+    jug = [p for p in ps if p[6] is not None]
+    pen = [p for p in ps if p[6] is None]
+    return OrderedDict([
+        ("slug", cfg["slug"]), ("nombre", cfg["nombre"]),
+        ("deporte", "Fútbol sala"), ("federacion", "Municipal"),
+        ("comp", "Juegos Deportivos Municipales"), ("grupo", cfg["grupo"]),
+        ("centro", MUNICIPAL_CENTRO),
+        ("jornada", str(crudo["jornada"])), ("fecha", crudo["fecha"]),
+        ("temp", "2026-2027"),
+        ("fuente", "https://deportesweb.madrid.es/DeportesWeb/"),
+        ("tabla", tabla), ("ultimos", jug[-6:]),
+        ("proximo", pen[0] if pen else None), ("total_jugados", len(jug)),
+        ("partidos", ps),
+    ])
+
+
+def _abre_tarjeta(pag, titulo):
+    """Las opciones de deportesweb son <article> con un manejador jQuery que
+    lanza un postback; se dispara igual que si se pulsara."""
+    pag.wait_for_function(
+        """t => [...document.querySelectorAll('article')]
+               .some(a => (a.innerText || '').trim().split('\\n')[0].trim() === t)""",
+        arg=titulo, timeout=60000)
+    pag.evaluate(
+        """t => { const a = [...document.querySelectorAll('article')]
+                    .find(a => (a.innerText || '').trim().split('\\n')[0].trim() === t);
+                  if (window.jQuery) jQuery(a).trigger('click'); else a.click(); }""",
+        titulo)
+
+
+def lee_municipal():
+    from playwright.sync_api import sync_playwright
+    crudos = OrderedDict()
+    with sync_playwright() as pw:
+        nav = pw.chromium.launch(args=["--no-sandbox"])
+        pag = nav.new_page(user_agent=UA, locale="es-ES",
+                           viewport={"width": 1280, "height": 900})
+        try:
+            pag.goto(MUNICIPAL_WEB, timeout=90000)
+            if "/Home" not in pag.url:
+                _abre_tarjeta(pag, "No identificado")
+                pag.wait_for_url("**/DeportesWeb/Home**", timeout=60000)
+            _abre_tarjeta(pag, "Consulta de clasificaciones")
+            pag.wait_for_url("**/ConsultarClasificaciones**", timeout=60000)
+            for cfg in MUNICIPAL:
+                # cada equipo desde la lista de centros, para que un fallo
+                # en uno no deje la pagina a medias para el siguiente
+                if not pag.query_selector("[id$='_ddlGrupos']"):
+                    _abre_tarjeta(pag, MUNICIPAL_CENTRO)
+                    pag.wait_for_selector("[id$='_ddlGrupos']", state="attached",
+                                          timeout=60000)
+                log("  %s (%s)" % (cfg["slug"], cfg["grupo"]))
+                try:
+                    crudos[cfg["slug"]] = pag.evaluate(JS_MUNICIPAL,
+                                                       {"grupo": cfg["grupo"]})
+                except Exception as e:
+                    crudos[cfg["slug"]] = e
+        finally:
+            nav.close()
+    return crudos
+
+
+def parte_municipal(dry):
+    log("PARTE E - Spinola municipales")
+    actual = leer_json("spinola-municipal.json") or OrderedDict(
+        [("generado", ""), ("equipos", [])])
+    antes = {e["slug"]: e for e in actual.get("equipos", [])}
+
+    crudos = lee_municipal()
+
+    equipos = []
+    for cfg in MUNICIPAL:
+        try:
+            c = crudos.get(cfg["slug"])
+            if isinstance(c, Exception) or c is None:
+                raise RuntimeError(str(c) if c is not None else "sin datos")
+            if c["cod_grupo"] != cfg["cod_grupo"]:
+                aviso("%s: el grupo '%s' tiene ahora el codigo %s (antes %s). "
+                      "Revisa MUNICIPAL." % (cfg["slug"], cfg["grupo"],
+                                             c["cod_grupo"], cfg["cod_grupo"]))
+            equipos.append(objeto_municipal(cfg, c))
+        except Exception as e:
+            if cfg["slug"] in antes:
+                fallo("%s: %s. Conservo los datos publicados." % (cfg["slug"], e))
+                equipos.append(antes[cfg["slug"]])
+            else:
+                fallo("%s: %s. No hay datos previos que conservar."
+                      % (cfg["slug"], e))
+
+    if not equipos:
+        raise RuntimeError("no hay ningun equipo municipal que publicar")
+
+    nuevo = OrderedDict([("generado", hoy().isoformat()), ("equipos", equipos)])
+
+    if iguales(actual, nuevo, ignorar=("generado",)):
+        log("  sin novedades, no toco spinola-municipal.json")
+        return False
+
+    for e in equipos:
+        pos = next((f[0] for f in e["tabla"] if f[-1] == 1), None)
+        log("  %s: %s, jornada %s" % (e["slug"], pos and "%sº" % pos,
+                                      e.get("jornada")))
+    escribe("spinola-municipal.json",
+            formato_lista(nuevo, "equipos", ["generado"]), dry)
+    return True
+
+
+# ----------------------------------------------------------------------------
 # main
 # ----------------------------------------------------------------------------
 
@@ -1303,7 +1528,7 @@ def main():
                     help="dice que cambiaria pero no escribe nada")
     ap.add_argument("--sin-goleadores", action="store_true",
                     help="se salta Flashscore (no necesita Playwright)")
-    ap.add_argument("--solo", default="moscardo,futsal,basket,cantera",
+    ap.add_argument("--solo", default="moscardo,futsal,basket,cantera,municipal",
                     help="partes a ejecutar, separadas por comas")
     ap.add_argument("--marcar-interrumpido", action="store_true",
                     help="no actualiza nada: solo anota que la ejecucion se corto")
@@ -1327,7 +1552,8 @@ def main():
     rffm = RFFM()
     cambios = []
     partes = OrderedDict([("moscardo", "omitido"), ("futsal", "omitido"),
-                          ("basket", "omitido"), ("cantera", "omitido")])
+                          ("basket", "omitido"), ("cantera", "omitido"),
+                          ("municipal", "omitido")])
 
     def corre(clave, fichero, etiqueta, funcion):
         """Ejecuta una parte y anota como le fue, sin cortar a las demas."""
@@ -1351,6 +1577,8 @@ def main():
           lambda: parte_basket(ARGS.dry_run))
     corre("cantera", "moscardo-cantera.json", "parte D (cantera Moscardo)",
           lambda: parte_cantera(rffm, ARGS.dry_run))
+    corre("municipal", "spinola-municipal.json", "parte E (municipal)",
+          lambda: parte_municipal(ARGS.dry_run))
 
     log("")
     log("=== resumen ===")
