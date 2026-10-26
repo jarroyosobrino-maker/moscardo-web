@@ -47,9 +47,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # Siempre: lo usan los goleadores (Flashscore) y la parte municipal
-      # (deportesweb.madrid.es), que no se puede leer sin navegador.
-      - name: Instalar el navegador
+      - name: Instalar el navegador para los goleadores
+        if: ${{ inputs.sin_goleadores != true }}
         run: python -m playwright install --with-deps chromium
 
       - name: Actualizar los JSON
@@ -74,14 +73,14 @@ jobs:
         run: |
           set -e
           # Por si acaso: no publicar nada que no sea JSON valido.
-          for f in datos.json spinola-resultados.json spinola-baloncesto.json moscardo-cantera.json spinola-municipal.json; do
+          for f in datos.json spinola-resultados.json spinola-baloncesto.json moscardo-cantera.json; do
             if [ -f "$f" ]; then
               python -m json.tool "$f" > /dev/null || { echo "$f no es JSON valido"; exit 1; }
             fi
           done
 
           # Los JSON de datos y el registro de la ejecucion, nada mas.
-          git add -- $(ls datos.json spinola-resultados.json spinola-baloncesto.json moscardo-cantera.json spinola-municipal.json 2>/dev/null)
+          git add -- $(ls datos.json spinola-resultados.json spinola-baloncesto.json moscardo-cantera.json 2>/dev/null)
           DATOS=$(git diff --cached --name-only | tr '\n' ' ')
 
           git add -- log/ejecuciones.jsonl log/ultima.json ESTADO.md
@@ -126,7 +125,7 @@ jobs:
       - name: Fallar si alguna fuente dio error
         if: ${{ steps.actualizar.outcome == 'failure' }}
         run: |
-          echo "Alguna de las partes fallo. Mira el registro de arriba:"
+          echo "Alguna de las tres partes fallo. Mira el registro de arriba:"
           echo "los equipos cuya fuente fallo conservan sus datos anteriores,"
           echo "asi que la web sigue mostrando lo ultimo bueno."
           exit 1

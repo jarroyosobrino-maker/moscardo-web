@@ -46,7 +46,6 @@ Si algo falla, el registro completo queda guardado 30 días como artefacto
 | B | `spinola-resultados.json` | RFFM (los 4 equipos de fútbol sala) |
 | C | `spinola-baloncesto.json` | FBM (ficha del club) |
 | D | `moscardo-cantera.json` | RFFM (fichas de equipo, clasificación y calendario de los 25 equipos de cantera y filiales del Moscardó) |
-| E | `spinola-municipal.json` | Ayuntamiento, deportesweb.madrid.es (Juegos Deportivos Municipales, centro Pradillo) |
 
 `moscardo-cantera.json` **solo lo lee la web HTML del Moscardó** (`CDC Moscardo/assets/js/equipo.js`
 en menta-webs): una página por equipo con cuerpo técnico, jugadores, resultados,
@@ -58,29 +57,6 @@ Los equipos del Spínola llevan además el campo `partidos` con el calendario
 completo. Wix no lo usa; lo lee la web HTML del club (cdspinolachamartin.es,
 `js/resultados.js` en el repositorio menta-webs) para pintar calendario,
 clasificación y el selector de partidos de la portada.
-
-### Parte E: equipos municipales
-
-deportesweb.madrid.es no tiene API: es ASP.NET, todo va por *postbacks* hechos con
-JavaScript y, sin sesión, redirige a la sede electrónica. Por eso la parte E abre un
-Chromium con Playwright y hace lo mismo que una persona: «No identificado» →
-«Consulta de clasificaciones» → centro **Pradillo** → grupo → jornadas 1 hasta la
-última jugada, con la casilla «Mostrar encuentros de la jornada seleccionada y de la
-siguiente» marcada (sin ella la web solo da la clasificación).
-
-Los equipos están en la lista `MUNICIPAL` de `actualizar.py`, buscados por el nombre
-exacto del grupo:
-
-| slug | grupo | código |
-|---|---|---|
-| `mun-fs-senior-rojo` | JDM CHM FS SEN MAS SAB MAÑ 1 | 30691 |
-| `mun-fs-senior-blanco` | JDM CHM FS SEN MAS SAB MAÑ 2 | 30692 |
-
-Si el Ayuntamiento renombra un grupo, la parte falla diciendo qué grupos ofrece la web
-y conserva lo publicado. Partido: `[jornada, fecha, hora, campo, local, visitante,
-goles_local, goles_visitante, spinola_local]` (igual que el baloncesto). Tabla:
-`[pos, equipo, J, G, E, P, TF, TC, puntos, es_spinola]`.
-`python test_municipal.py` prueba la transformación sin red.
 
 Los equipos de fútbol sala llevan también `goleadores` (goles del Spínola y del
 rival en cada jornada, sacados del acta de la RFFM: `/acta-partido/<codacta>`) y
@@ -159,12 +135,12 @@ Debe terminar en `TODO CORRECTO`. Es útil después de tocar el script.
 ```
 python actualizar.py                      actualiza si hay novedades
 python actualizar.py --dry-run            dice qué cambiaría, no escribe
-python actualizar.py --sin-goleadores     se salta Flashscore
-python actualizar.py --solo basket        solo una parte (moscardo, futsal, basket, cantera, municipal)
+python actualizar.py --sin-goleadores     se salta Flashscore (no necesita Playwright)
+python actualizar.py --solo basket        solo una parte (moscardo, futsal, basket)
 ```
 
 Dependencias: `pip install requests beautifulsoup4 playwright` y, para los
-goleadores y la parte municipal, `python -m playwright install chromium`.
+goleadores, `python -m playwright install chromium`.
 
 Códigos de salida: `0` todo bien, `1` error, `2` alguna parte falló pero las
 demás se escribieron.
