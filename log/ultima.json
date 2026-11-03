@@ -1,21 +1,20 @@
 {
- "ts": "2026-11-02T23:52:01+0100",
+ "ts": "2026-11-03T21:35:45+0100",
  "estado": "ok",
  "cambios": [
-  "datos.json",
   "spinola-resultados.json",
   "spinola-baloncesto.json",
   "moscardo-cantera.json"
  ],
  "partes": {
-  "moscardo": "ok",
+  "moscardo": "sin-cambios",
   "futsal": "ok",
   "basket": "ok",
   "cantera": "ok"
  },
  "avisos": [],
  "fallos": [],
- "url": "https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/41540493387",
- "run": "41540493387",
+ "url": "https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/41713629316",
+ "run": "41713629316",
  "disparo": "schedule"
 }
