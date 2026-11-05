@@ -1,5 +1,5 @@
 {
- "ts": "2026-11-04T21:54:04+0100",
+ "ts": "2026-11-05T22:10:51+0100",
  "estado": "ok",
  "cambios": [
   "spinola-resultados.json",
@@ -13,7 +13,7 @@
  },
  "avisos": [],
  "fallos": [],
- "url": "https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/41910604057",
- "run": "41910604057",
+ "url": "https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/42109887296",
+ "run": "42109887296",
  "disparo": "schedule"
 }
