@@ -1,24 +1,24 @@
 {
- "ts": "2026-11-09T00:04:37+0100",
- "estado": "parcial",
+ "ts": "2026-11-10T00:31:26+0100",
+ "estado": "ok",
  "cambios": [
+  "datos.json",
   "spinola-resultados.json",
   "spinola-baloncesto.json",
   "moscardo-cantera.json"
  ],
  "partes": {
-  "moscardo": "sin-cambios",
+  "moscardo": "ok",
   "futsal": "ok",
   "basket": "ok",
   "cantera": "ok"
  },
- "avisos": [],
- "fallos": [
-  "moscardo-c: la RFFM no devolvio la ficha del equipo 6796354. Conservo los datos publicados.",
-  "cadete-d: la RFFM no devolvio la ficha del equipo 3365516. Conservo los datos publicados.",
-  "prebenjamin-b: la RFFM no devolvio la ficha del equipo 15283754. Conservo los datos publicados."
+ "avisos": [
+  "el goleador 'Silva M' no aparece en la plantilla oficial; uso el nombre de Flashscore.",
+  "el goleador 'Silva M' no aparece en la plantilla oficial; uso el nombre de Flashscore."
  ],
- "url": "https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/42532849466",
- "run": "42532849466",
+ "fallos": [],
+ "url": "https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/42720809491",
+ "run": "42720809491",
  "disparo": "schedule"
 }
