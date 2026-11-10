@@ -2,12 +2,11 @@
 
 Fichero generado por `actualizar.py`. No editar a mano.
 
-- **Ultima ejecucion:** 2026-11-10T00:31:26+0100
-- **Estado:** ok
-- **Ficheros con novedades:** datos.json, spinola-resultados.json, spinola-baloncesto.json, moscardo-cantera.json
-- **Partes:** moscardo (ok), futsal (ok), basket (ok), cantera (ok)
-- **Ejecucion en GitHub Actions:** https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/42720809491
+- **Ultima ejecucion:** 2026-11-10T21:57:59+0100
+- **Estado:** parcial
+- **Ficheros con novedades:** spinola-resultados.json, spinola-baloncesto.json
+- **Partes:** moscardo (sin-cambios), futsal (ok), basket (ok), cantera (sin-cambios)
+- **Ejecucion en GitHub Actions:** https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/42899995982
 
-## Avisos (2)
-- el goleador 'Silva M' no aparece en la plantilla oficial; uso el nombre de Flashscore.
-- el goleador 'Silva M' no aparece en la plantilla oficial; uso el nombre de Flashscore.
+## Fallos (1)
+- infantil-c: la RFFM no devolvio la ficha del equipo 3361161. Conservo los datos publicados.
