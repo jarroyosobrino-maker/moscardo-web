@@ -1,21 +1,19 @@
 {
- "ts": "2026-11-10T21:57:59+0100",
- "estado": "parcial",
+ "ts": "2026-11-11T22:31:27+0100",
+ "estado": "ok",
  "cambios": [
-  "spinola-resultados.json",
-  "spinola-baloncesto.json"
+  "datos.json",
+  "moscardo-cantera.json"
  ],
  "partes": {
-  "moscardo": "sin-cambios",
-  "futsal": "ok",
-  "basket": "ok",
-  "cantera": "sin-cambios"
+  "moscardo": "ok",
+  "futsal": "sin-cambios",
+  "basket": "sin-cambios",
+  "cantera": "ok"
  },
  "avisos": [],
- "fallos": [
-  "infantil-c: la RFFM no devolvio la ficha del equipo 3361161. Conservo los datos publicados."
- ],
- "url": "https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/42899995982",
- "run": "42899995982",
+ "fallos": [],
+ "url": "https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/43103349410",
+ "run": "43103349410",
  "disparo": "schedule"
 }
