@@ -1,19 +1,23 @@
 {
- "ts": "2026-11-11T22:31:27+0100",
+ "ts": "2026-11-12T22:32:38+0100",
  "estado": "ok",
  "cambios": [
   "datos.json",
+  "spinola-resultados.json",
+  "spinola-baloncesto.json",
   "moscardo-cantera.json"
  ],
  "partes": {
   "moscardo": "ok",
-  "futsal": "sin-cambios",
-  "basket": "sin-cambios",
+  "futsal": "ok",
+  "basket": "ok",
   "cantera": "ok"
  },
- "avisos": [],
+ "avisos": [
+  "la jornada 13 cambia de fecha: 2026-11-29 -> 2026-11-28. Revisa si hace falta una nota."
+ ],
  "fallos": [],
- "url": "https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/43103349410",
- "run": "43103349410",
+ "url": "https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/43310900406",
+ "run": "43310900406",
  "disparo": "schedule"
 }

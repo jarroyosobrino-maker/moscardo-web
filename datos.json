@@ -1,5 +1,5 @@
 {
- "actualizado": "11 de noviembre de 2026",
+ "actualizado": "12 de noviembre de 2026",
  "tras": "tras la jornada 10",
  "mi_equipo": "CD Colonia Moscardó",
  "notas": [["Horarios:", "los designa la RFFM semana a semana, por eso la mayoría aparecen todavía sin hora. La fecha de cada jornada es la oficial del calendario; algún partido puede adelantarse al sábado."], ["Jornada 34:", "el calendario oficial la sitúa el 9 de mayo de 2027, no el 5 como figuraba en el cartel del club."]],
@@ -16,7 +16,7 @@
   {"j": 10, "fecha": "2026-11-08", "local": false, "rival": "CD Leganés «B»", "hora": "12:00", "gf": 2, "gc": 2, "goles": "Silva M, 74', 84'"},
   {"j": 11, "fecha": "2026-11-15", "local": true, "rival": "CD Galapagar", "hora": "12:00"},
   {"j": 12, "fecha": "2026-11-22", "local": false, "rival": "Rayo Ciudad Alcobendas CF", "hora": "18:00"},
-  {"j": 13, "fecha": "2026-11-29", "local": true, "rival": "CF Trival Valderas Alcorcón", "hora": "12:00"},
+  {"j": 13, "fecha": "2026-11-28", "local": true, "rival": "CF Trival Valderas Alcorcón", "hora": "18:00"},
   {"j": 14, "fecha": "2026-12-06", "local": false, "rival": "UD San Sebastián de los Reyes «B»"},
   {"j": 15, "fecha": "2026-12-13", "local": false, "rival": "CD Móstoles URJC"},
   {"j": 16, "fecha": "2026-12-20", "local": true, "rival": "México FC"},
