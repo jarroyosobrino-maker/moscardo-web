@@ -2,14 +2,8 @@
 
 Fichero generado por `actualizar.py`. No editar a mano.
 
-- **Ultima ejecucion:** 2026-11-15T20:59:35+0100
-- **Estado:** parcial
-- **Ficheros con novedades:** spinola-resultados.json, spinola-baloncesto.json, moscardo-cantera.json
-- **Partes:** moscardo (sin-cambios), futsal (ok), basket (ok), cantera (ok)
-- **Ejecucion en GitHub Actions:** https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/43754869543
-
-## Fallos (4)
-- cadete-d: la RFFM no devolvio la ficha del equipo 3365516. Conservo los datos publicados.
-- alevin-a-f11: la RFFM no devolvio standings para OrderedDict({'temporada': '22', 'competicion': '26737859', 'grupo': '27325582', 'tipojuego': '1'}). Conservo los datos publicados.
-- alevin-a-f7: la RFFM no devolvio la ficha del equipo 90. Conservo los datos publicados.
-- alevin-b: la RFFM no devolvio la ficha del equipo 334070. Conservo los datos publicados.
+- **Ultima ejecucion:** 2026-11-16T10:37:04+0100
+- **Estado:** ok
+- **Ficheros con novedades:** datos.json, spinola-resultados.json, spinola-baloncesto.json, moscardo-cantera.json
+- **Partes:** moscardo (ok), futsal (ok), basket (ok), cantera (ok)
+- **Ejecucion en GitHub Actions:** https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/43839052017
