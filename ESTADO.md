@@ -2,11 +2,8 @@
 
 Fichero generado por `actualizar.py`. No editar a mano.
 
-- **Ultima ejecucion:** 2026-11-22T20:56:48+0100
-- **Estado:** parcial
+- **Ultima ejecucion:** 2026-11-22T21:49:23+0100
+- **Estado:** ok
 - **Ficheros con novedades:** spinola-resultados.json, spinola-baloncesto.json, moscardo-cantera.json
 - **Partes:** moscardo (sin-cambios), futsal (ok), basket (ok), cantera (ok)
-- **Ejecucion en GitHub Actions:** https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/45063161696
-
-## Fallos (1)
-- cadete-d: la RFFM no devolvio la ficha del equipo 3365516. Conservo los datos publicados.
+- **Ejecucion en GitHub Actions:** https://github.com/jarroyosobrino-maker/moscardo-web/actions/runs/45068315134
